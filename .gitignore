@@ -1,0 +1,4 @@
+# Ignorar el contenido de las carpetas node_modules, dist y package-lock
+node_modules/
+dist/operativos
+package-lock.json

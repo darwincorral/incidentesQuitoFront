@@ -1,0 +1,77 @@
+<div class="row">
+    <div class="col-lg-4 col-md-7 offset-lg-2">
+        <div class="card">
+            <div class="card-header">
+                <h3>
+                    Mis Datos
+                </h3>
+            </div>
+            <div class="card-body">
+                <form [formGroup]="userForm" (ngSubmit)="updateUser()" novalidate>
+                    <div class="form-group">
+                        <label for="correo">Correo Electrónico</label>
+                        <input maxlength="40" type="text" formControlName="correo" placeholder="Ingresar Correo Electrónico" class="form-control" name="correo" required>
+                    </div>
+                    <div *ngIf="userForm.controls['correo'].errors && (userForm.controls['correo'].dirty || userForm.controls['correo'].touched)" class="alert alert-danger">
+                        <div *ngIf="userForm.controls['correo'].invalid">
+                            <div *ngIf="userForm.controls['correo'].errors.required">Correo Electrónico campo requerido</div>
+                            <div *ngIf="userForm.controls['correo'].errors.email">Ingrese un correo válido</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="contacto">Contacto Telefónico</label>
+                        <input type="text" formControlName="contacto" placeholder="Ingresar número celular/convencional" class="form-control" name="contacto">
+                    </div>
+                    <div class="form-group">
+                        <label for="direccion">Dirección Domiciliaria</label>
+                        <textarea name="direccion" formControlName="direccion" rows="2" class="form-control"></textarea>
+                    </div>
+                    <div class="text-right">
+                        <button type="submit" [disabled]="userForm.pristine || userForm.invalid" class="btn btn-info">Actualizar Datos</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-7">
+        <div class="card">
+            <div class="card-header">
+                <h3>
+                    Modificar Contraseña
+                </h3>
+            </div>
+            <div class="card-body">
+                <form novalidate [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
+                    <div class="form-group">
+                        <label for="passwordOld">Contraseña Actual</label>
+                        <input type="password" formControlName="passwordOld" class="form-control" name="passwordOld">
+                    </div>
+                    <div *ngIf="passwordForm.controls['passwordOld'].invalid && (passwordForm.controls['passwordOld'].dirty || passwordForm.controls['passwordOld'].touched)" class="alert alert-danger">
+                        <div *ngIf="passwordForm.controls['passwordOld'].errors.required">
+                            Contraseña Actual requerida
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="passwordNew">Contraseña Nueva</label>
+                        <input type="password" formControlName="passwordNew" class="form-control" name="passwordNew">
+                    </div>
+                    <div *ngIf="passwordForm.controls['passwordNew'].invalid && (passwordForm.controls['passwordNew'].dirty || passwordForm.controls['passwordNew'].touched)" class="alert alert-danger">
+                        <div *ngIf="passwordForm.controls['passwordNew'].errors.required">
+                            Contraseña Nueva requerida
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="passwordConfirm">Confirmar Contraseña</label>
+                        <input type="password" formControlName="passwordConfirm" class="form-control" name="passwordConfirm">
+                    </div>
+                    <div *ngIf="passwordForm.errors?.sonIguales && !passwordForm.pristine" class="alert alert-danger">
+                        Las contraseñas deben de ser iguales
+                    </div>
+                    <div class="text-right">
+                        <button type="submit" [disabled]="passwordForm.pristine || passwordForm.invalid" class="btn btn-success">Actualizar Datos</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

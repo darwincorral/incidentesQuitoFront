@@ -1,0 +1,46 @@
+<div class="auth-wrapper">
+    <div class="container-fluid h-100">
+        <div class="row flex-row h-100 bg-white">
+            <div class="col-xl-8 col-lg-6 col-md-5 p-0 d-md-block d-lg-block d-sm-none d-none">
+                <div class="lavalite-bg" style="background-image: url('assets/img/auth/login-bg.png')">
+                    <div class="lavalite-overlay"></div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-lg-6 col-md-7 my-auto p-0">
+                <div class="authentication-form mx-auto">
+                    <!-- <div class="text-center">
+                        <img src="assets/img/LOGO-AMT.png" width="200px" alt="">
+                    </div>-->
+                    <h3>Inicie Sesión</h3>
+                    <form ngNativeValidate #f="ngForm" (ngSubmit)="ingresar(f)">
+                        <div class="form-group">
+                            <input [ngModel]="usuario" name="usuario" type="text" class="form-control" required placeholder="Usuario">
+                            <i class="ik ik-user"></i>
+                        </div>
+                        <div class="form-group">
+                            <input ngModel name="password" type="password" class="form-control" required placeholder="Contraseña">
+                            <i class="ik ik-lock"></i>
+                        </div>
+                        <div class="row">
+                            <div class="col text-left">
+                                <label class="custom-control custom-checkbox">
+                                  <input [(ngModel)]="recuerdame" name="recuerdame" type="checkbox" class="custom-control-input" value="option1">
+                                  <span class="custom-control-label">&nbsp;Recordar</span>
+                              </label>
+                            </div>
+                            <div class="col text-right">
+                                <a routerLink="/forgotPassword">Olvido su Contraseña?</a>
+                            </div>
+                        </div>
+                        <div class="sign-btn text-center">
+                            <button type="submit" class="btn btn-theme">Ingresar</button>
+                        </div>
+                    </form>
+                    <!-- <div class="register">
+                        <p>Don't have an account? <a href="register.html">Create an account</a></p>
+                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

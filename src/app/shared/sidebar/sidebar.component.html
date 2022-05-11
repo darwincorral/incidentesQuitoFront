@@ -1,0 +1,22 @@
+<div class="app-sidebar colored">
+    <div class="sidebar-header">
+        <a class="header-brand" routerLink="">
+            <span class="text" style="font-size: 18px; align-content: center">INCIDENTES QUITO</span>
+        </a>
+        <button id="sidebarClose" class="nav-close"><i class="ik ik-x"></i></button>
+    </div>
+
+    <div class="sidebar-content">
+        <div class="nav-container">
+            <nav id="main-menu-navigation" class="navigation-main">
+                <div class="nav-lavel">Navegación</div>
+                <div *ngFor="let menu of _sidebar.menu">
+                    <div class="nav-item" routerLinkActive="active">
+                        <a [routerLink]="[menu.url]"><i [class]="menu.icono" ></i><span>{{menu.titulo}}</span></a>
+
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>
