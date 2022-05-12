@@ -9,7 +9,7 @@ import { UiServicesService,IncidentesService } from 'src/app/services/service.in
 export class IncidentesComponent implements OnInit {
   isCargando:boolean = false;
   incidentes = [];
-
+  incidente = null;
   constructor(
     private incidentesService: IncidentesService,
     private uiService: UiServicesService,
@@ -32,4 +32,7 @@ export class IncidentesComponent implements OnInit {
   });
   }
 
+  verIncidente(incidente){
+    this.incidente = incidente;
+  }
 }
