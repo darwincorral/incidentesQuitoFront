@@ -111,12 +111,12 @@ export class UsuarioService {
 
   updateUser(formUser,persona){
     let form = {
-      'secuenciaCabeceraPersona': persona.cabeceraPersona.secuenciaCabeceraPersona,
+      'idCabeceraPersona': persona.cabeceraPersona.idCabeceraPersona,
       'telefonoCelular':formUser.contacto,
       'direccionDomicilio': formUser.direccion,
-      'detalleCabeceraPersona':{
-        'secuenciaDetallePersona': persona.cabeceraPersona.detalleCabeceraPersona.secuenciaDetallePersona,
-        'mailPersonal':formUser.correo
+      'detallePersona':{
+        'idDetallePersona': persona.cabeceraPersona.detallePersona.idDetallePersona,
+        'mail':formUser.correo
       }
     }
     return this.http.post(environment.URL_SERVICIOS_SEGURIDAD+'/updateCabeceraPersona',form)

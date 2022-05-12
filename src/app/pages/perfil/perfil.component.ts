@@ -76,31 +76,15 @@ export class PerfilComponent implements OnInit {
     if (result.value) {
       this._usuarioService.updateUser(this.userForm.value,this.persona).subscribe((resp:any)=>{
         if(resp.codRetorno == '0001'){
-          Swal.fire(
-            'Actualizado!',
-            'Sus Datos fueron actualizados correctamente',
-            'success'
-          )
+          this.alertConfirm();
         }else{
-          Swal.fire(
-            'Error!',
-            'Ocurrio un error vuelva a intentarlo',
-            'error'
-          )
+          this.alertError('Ocurrio un error vuelva a intentarlo');
         }
       },error=>{
-        Swal.fire(
-          'Error!',
-          'Ocurrio un error vuelva a intentarlo',
-          'error'
-        )
+        this.alertError('Ocurrio un error vuelva a intentarlo');
       })
     } else if (result.dismiss === Swal.DismissReason.cancel) {
-      Swal.fire(
-        'Acción Cancelada',
-        '',
-        'error'
-      )
+      this.alertError('Acción Cancelada');
     }
   });
   }
@@ -122,33 +106,33 @@ export class PerfilComponent implements OnInit {
         this._usuarioService.cambiarPassword(this.passwordForm.value).subscribe((resp:any)=>{
           if(resp.codRetorno=='0001'){
             this.passwordForm.reset();
-            Swal.fire(
-              'Actualizado!',
-              'Sus Datos fueron actualizados correctamente',
-              'success'
-            )
+            this.alertConfirm();
           }else{
-            Swal.fire(
-              'Error!',
-              resp.retorno,
-              'error'
-            )
+            this.alertError(resp.retorno);
           }
         },error=>{
-          Swal.fire(
-            'Error!',
-            'Ocurrio un error vuelva a intentarlo',
-            'error'
-          )
+          this.alertError('Ocurrio un error vuelva a intentarlo');
         })
       } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire(
-          'Acción Cancelada',
-          '',
-          'error'
-        )
+        this.alertError('Acción Cancelada');
       }
     });
+   }
+
+   alertConfirm(){
+    Swal.fire(
+      'Actualizado!',
+      'Sus Datos fueron actualizados correctamente',
+      'success'
+    )
+   }
+
+   alertError(message){
+    Swal.fire(
+      message,
+      '',
+      'error'
+    )
    }
 
 }
