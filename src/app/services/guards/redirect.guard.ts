@@ -15,7 +15,7 @@ export class RedirectGuard implements CanActivate  {
 
     if ( this._usuarioService.estaLogueado() ) {
       //console.log( 'PASO EL GUARD');
-      this.router.navigate(['/dashboard'])
+      this.router.navigate(['/incidentes'])
       return false;
     } else {
       //console.log( 'Bloqueado por guard' );

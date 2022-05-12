@@ -10,14 +10,14 @@ export class SidebarService {
     {
       titulo: 'Incidentes',
       icono: 'ik ik-align-justify',
-      url: '/dashboard',
+      url: '/incidentes',
       submenu:[
         { titulo: 'Dashboard', url: '/dashboard' },
       ]
     },{
       titulo: 'Catalogos',
       icono: 'ik ik-bar-chart-line',
-      url: '#',
+      url: '/catalogo',
       submenu:[
         { titulo: 'Template & Plugins', url: '/template' },
       ]

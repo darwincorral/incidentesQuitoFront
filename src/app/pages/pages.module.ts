@@ -22,9 +22,8 @@ import {DropdownModule} from 'primeng/dropdown';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
-
-
-
+import { IncidentesComponent } from './incidentes/incidentes.component';
+import { CatalogoComponent } from './catalogo/catalogo.component';
 
 @NgModule({
 declarations:[
@@ -32,6 +31,8 @@ declarations:[
     DashboardComponent,
     TemplateComponent,
     PerfilComponent,
+    IncidentesComponent,
+    CatalogoComponent,
 ],
 exports:[
     DashboardComponent,

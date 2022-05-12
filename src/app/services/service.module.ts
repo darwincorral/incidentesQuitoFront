@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import {SidebarService, UsuarioService, LoginGuardGuard, UiServicesService} from './service.index';
+import {SidebarService, UsuarioService, LoginGuardGuard, UiServicesService,CatalogosService,IncidentesService} from './service.index';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
@@ -10,7 +10,9 @@ import { HttpClientModule } from '@angular/common/http';
     SidebarService,
     UsuarioService,
     LoginGuardGuard,
-    UiServicesService
+    UiServicesService,
+    IncidentesService,
+    CatalogosService
   ],
   imports: [
     CommonModule,
