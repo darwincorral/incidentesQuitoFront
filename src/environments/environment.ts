@@ -6,6 +6,7 @@ export const environment = {
   //APIS
   URL_SERVICIOS_SEGURIDAD : '',
   URL_SERVICIOS_CORREO : '',
+  URL_SERVICIOS : 'http://localhost:3000',
 
   //ID DE APLICACION DE LA BD
   idAplicacion: '41',
