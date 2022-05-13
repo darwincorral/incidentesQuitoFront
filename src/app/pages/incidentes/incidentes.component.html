@@ -1,50 +1,103 @@
-<div class="row animated fadeIn">
-  <div class="col-12">
-    <div class="card">
-      <div class="card-body">
-        <div class="table-responsive">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Identificacion</th>
-                <th>Nombres</th>
-                <th>Direccion</th>
-                <th>Incidente</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngIf="isCargando">
-                <td colspan="10">
-                  <div class="col-12 text-center">
-                    <img src="assets/img/loading/loader.gif" width="160px" height="120px">
-                    <br>
-                    <span>Espere por favor</span>
+<div class="col-lg-12">
+  <div class="card">
+    <ul class="nav nav-pills custom-pills" id="pills-tab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="pills-timeline-tab" data-toggle="pill" href="#current-month" role="tab"
+          aria-controls="pills-timeline" aria-selected="true">Linea de Tiempo</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#last-month" role="tab"
+          aria-controls="pills-profile" aria-selected="false">Listado</a>
+      </li>
+    </ul>
+    <div class="tab-content" id="pills-tabContent">
+      <div class="tab-pane fade active show" id="current-month" role="tabpanel" aria-labelledby="pills-timeline-tab">
+        <div class="card-body">
+          <div class="profiletimeline mt-0">
+            <div class="sl-item" *ngFor="let incidente of incidentes ; let i = index">
+              <div class="sl-left"> <img [src]="incidente.persona.fotoPerfil" alt="user" class="rounded-circle"> </div>
+              <div class="sl-right">
+                <div> <a href="javascript:void(0)" class="link">{{incidente.persona.identificacion}} -
+                    {{incidente.persona.nombres}} {{incidente.persona.apellidos}}</a> <span class="sl-date ml-1">5
+                    minutes ago</span><br>
+                  <div class="mt-20 row">
+                    <div class="col-md-2 col-xs-12"><img [src]="incidente.fotoUno" alt="user" class="img-fluid rounded">
+                    </div>
+                    <div class="col-md-2 col-xs-12"><img [src]="incidente.fotoDos" alt="user" class="img-fluid rounded">
+                    </div>
+                    <div class="col-md-5 col-xs-12">
+                      <strong>Dirección</strong><br>
+                      <p class="text-muted"> {{incidente.direccion}}</p>
+                      <strong>Descripción</strong><br>
+                      <p class="text-muted"> {{incidente.descripcion}}</p>
+                      <a (click)="verIncidente(incidente)" href="#" class="btn btn-success" data-toggle="modal"
+                        data-target="#viewLayoutItemNotificacion"> Ver Detalle</a>
+                      <a href="javascript:void(0)" class="btn btn-danger ml-1"> Incidente Falso</a>
+                    </div>
+                    <div class="col-md-3 col-xs-12">
+                      <div class="map-box">
+                        <agm-map [zoom]="17" [latitude]="incidente.latitud" [longitude]="incidente.longitud"
+                          (mapClick)="location($event)">
+                          <agm-marker [latitude]="incidente.latitud" [longitude]="incidente.longitud">
+                          </agm-marker>
+                        </agm-map>
+                      </div>
+                    </div>
                   </div>
-                  <hr>
-                </td>
-              </tr>
-              <tr *ngIf="incidentes.length==0">
-                <td colspan="10" class="text-center">
-                  No existen registros
-                </td>
-              </tr>
-              <tr *ngFor="let incidente of incidentes ; let i = index">
-                <td>{{i+1}}</td>
-                <td>{{incidente.persona.identificacion}}</td>
-                <td>{{incidente.persona.nombres}} {{incidente.persona.apellidos}}</td>
-                <td>{{incidente.direccion}}</td>
-                <td>{{incidente.tipoIncidente.nombre}}</td>
-                <td>
-                  <div class="table-actions text-left">
-                    <a (click)="verIncidente(incidente)" data-toggle="modal" data-target="#viewLayoutItemNotificacion"><i class="ik ik-eye text-info"
-                        style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="Ver Detalle"></i></a>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                </div>
+              </div>
+            </div>
+            <hr>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="last-month" role="tabpanel" aria-labelledby="pills-profile-tab">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Identificacion</th>
+                  <th>Nombres</th>
+                  <th>Direccion</th>
+                  <th>Incidente</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="isCargando">
+                  <td colspan="10">
+                    <div class="col-12 text-center">
+                      <img src="assets/img/loading/loader.gif" width="160px" height="120px">
+                      <br>
+                      <span>Espere por favor</span>
+                    </div>
+                    <hr>
+                  </td>
+                </tr>
+                <tr *ngIf="incidentes.length==0">
+                  <td colspan="10" class="text-center">
+                    No existen registros
+                  </td>
+                </tr>
+                <tr *ngFor="let incidente of incidentes ; let i = index">
+                  <td>{{i+1}}</td>
+                  <td>{{incidente.persona.identificacion}}</td>
+                  <td>{{incidente.persona.nombres}} {{incidente.persona.apellidos}}</td>
+                  <td>{{incidente.direccion}}</td>
+                  <td>{{incidente.tipoIncidente.nombre}}</td>
+                  <td>
+                    <div class="table-actions text-left">
+                      <a (click)="verIncidente(incidente)" data-toggle="modal"
+                        data-target="#viewLayoutItemNotificacion"><i class="ik ik-eye text-info" style="cursor: pointer;"
+                          data-toggle="tooltip" data-placement="top" title="Ver Detalle"></i></a>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -55,10 +108,8 @@
 
 
 
-
-
-<div class="modal fade edit-layout-modal" id="viewLayoutItemNotificacion" *ngIf="incidente!=null" tabindex="-1" role="dialog"
-  aria-labelledby="viewLayoutItemNotificacion" aria-hidden="true" style="padding-right: 0px;">
+<div class="modal fade edit-layout-modal" id="viewLayoutItemNotificacion" tabindex="-1" role="dialog"
+  aria-labelledby="viewLayoutItemNotificacion" aria-hidden="true" style="padding-right: 0px;" *ngIf="incidente!=null">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
 
@@ -70,30 +121,42 @@
       <div class="modal-body">
         <div class="alert alert-primary" role="alert">
           <div class="row">
-
-              <div class="col-lg-6 text-center">
-                  <small class="text-muted d-block">Fecha Incidente</small>
-                  <h6>{{incidente.fechaCreacion}}</h6>
-              </div>
-              <div class="col-lg-4 text-center">
-                  <small class="text-muted d-block">Hora Incidente</small>
-                  <h6>{{incidente.fechaCreacion}} </h6>
-              </div>
+            <div class="col-lg-6 text-center">
+              <h5 class="text-muted d-block">Fecha Incidente</h5>
+              <h6>{{incidente.fechaCreacion}}</h6>
+            </div>
+            <div class="col-lg-4 text-center">
+              <h5 class="text-muted d-block">Hora Incidente</h5>
+              <h6>{{incidente.horaCreacion}} </h6>
+            </div>
           </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <div class="text-center">
+              <img [src]="incidente.persona.fotoCedula" width="150">
+              <h5 class="card-title mt-10">{{incidente.persona.nombres}} {{incidente.persona.apellidos}}</h5>
+              <p class="card-title">{{incidente.persona.identificacion}}</p>
+            </div>
+          </div>
+          <hr class="mb-0">
+          <div class="card-body">
+            <small class="text-muted d-block">Correo</small>
+            <h6>{{incidente.persona.correo}}</h6>
+            <small class="text-muted d-block pt-10">Contacto</small>
+            <h6>{{incidente.persona.telefono}}</h6>
+            <hr>
+            <div class="map-box">
+              <agm-map [zoom]="17" [latitude]="incidente.latitud" [longitude]="incidente.longitud"
+                (mapClick)="location($event)">
+                <agm-marker [latitude]="incidente.latitud" [longitude]="incidente.longitud">
+                </agm-marker>
+              </agm-map>
+            </div>
+          </div>
+        </div>
       </div>
-        <div class="row">
-            <div class="col-md-6"><img src="../img/portfolio-1.jpg" class="img-fluid" alt=""></div>
-            <div class="col-md-6"><img src="../img/portfolio-8.jpg" class="img-fluid" alt=""></div>
-        </div>
-        <div class="jumbotron pt-30 pb-30 mt-30">
-            <h2 class="mt-0">Hello, world!</h2>
-            <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-        </div>
-       
-        <div class="map-box">
-          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d248849.886539092!2d77.49085452149588!3d12.953959988118836!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1670c9b44e6d%3A0xf8dfc3e8517e4fe0!2sBengaluru%2C+Karnataka!5e0!3m2!1sen!2sin!4v1542005497600" width="100%" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
-      </div> 
-    </div>
 
       <div class="modal-footer">
         <div class="row">

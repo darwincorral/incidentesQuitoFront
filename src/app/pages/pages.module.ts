@@ -24,6 +24,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { IncidentesComponent } from './incidentes/incidentes.component';
 import { CatalogoComponent } from './catalogo/catalogo.component';
+import { AgmCoreModule } from '@agm/core';
 
 @NgModule({
 declarations:[
@@ -51,7 +52,10 @@ imports:[
     DropdownModule,
     MatMenuModule,
     MatProgressSpinnerModule,
-    Ng2SearchPipeModule
+    Ng2SearchPipeModule,
+    AgmCoreModule.forRoot({
+        apiKey: ''
+      })
 ]
 
 })
