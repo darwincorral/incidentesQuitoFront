@@ -12,4 +12,8 @@ export class IncidentesService {
   obtenerIncidentes(){
     return this.http.get(environment.URL_SERVICIOS+'/incidentes/');
   }
+
+  cancelarIncidente(idIncidente,idPersona){
+    return this.http.put(environment.URL_SERVICIOS+`/incidentes/reportarIncidenteFalso/${idIncidente}/CAN/${idPersona}`,'');
+  }
 }

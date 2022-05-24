@@ -12,8 +12,7 @@ export class IncidentesComponent implements OnInit {
   isCargando:boolean = false;
   incidentes = [];
   incidente = null;
-
-  title = 'My first AGM project';
+  
   latitude=51.678418;
   longitude=7.809007;
 
@@ -36,8 +35,7 @@ export class IncidentesComponent implements OnInit {
     this.incidentesService.obtenerIncidentes()
     .subscribe((incidentes:any)=>{
       this.isCargando = false;
-      this.incidentes = incidentes;
-      console.log(incidentes);
+      this.incidentes = incidentes.reverse();
     },error => {
       this.isCargando = false;
     this.incidentes = [];
@@ -45,13 +43,16 @@ export class IncidentesComponent implements OnInit {
   }
 
   verIncidente(incidente){
-       
-    let horaCreacion = moment(incidente.fechaCreacion).format("HH:mm");
-    let fechaCreacion = moment(incidente.fechaCreacion).format("YYYY-MM-DD");
     this.incidente = incidente;
-    console.log(incidente)
-    this.incidente.fechaCreacion =fechaCreacion;
-    this.incidente.horaCreacion = horaCreacion;
+  }
+
+  cancelarIncidente(incidente){
+   this.incidentesService.cancelarIncidente(incidente._id,incidente.persona._id)
+    .subscribe((incidente:any)=>{
+      this.incidentes = [];
+      this.obtenerIncidentes();
+    },error => {
+  });
   }
 
 }
