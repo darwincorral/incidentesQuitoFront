@@ -12,4 +12,17 @@ export class CatalogosService {
   obtenerCatalogos(idPadre){
     return this.http.get(environment.URL_SERVICIOS+'/catalogo/findIdPadre/'+idPadre);
   }
+
+
+  crearCatalogo(formData){
+    return this.http.post(environment.URL_SERVICIOS+'/catalogo/',formData);
+  }
+
+  editarCatalogo(idCatalogo,formData){
+    return this.http.put(environment.URL_SERVICIOS+'/catalogo/'+idCatalogo,formData);
+  }
+
+  eliminarCatalogo(idCatalogo){
+    return this.http.delete(environment.URL_SERVICIOS+'/catalogo/'+idCatalogo);
+  }
 }

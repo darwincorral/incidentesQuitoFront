@@ -1,46 +1,162 @@
 <div class="row animated fadeIn">
-  <div class="col-4">
-    <div class="card">
-      <div class="card-body">
-        <div class="table-responsive">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Nombre</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngIf="isCargando">
-                <td colspan="10">
-                  <div class="col-12 text-center">
-                    <img src="assets/img/loading/loader.gif" width="160px" height="120px">
-                    <br>
-                    <span>Espere por favor</span>
-                  </div>
-                  <hr>
-                </td>
-              </tr>
-              <tr *ngIf="catalogos.length==0">
-                <td colspan="10" class="text-center">
-                  No existen registros
-                </td>
-              </tr>
-              <tr *ngFor="let catalogo of catalogos ; let i = index">
-                <td>{{i+1}}</td>
-                <td>{{catalogo.nombre}}</td>
-                <td>
-                  <div class="table-actions text-left">
-                    <a data-toggle="modal" data-target="#viewLayoutItemSancion"><i class="ik ik-eye text-info"
-                        style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="Ver Detalle"></i></a>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+    <div class="col-lg-5 col-md-5">
+        <div class="card">
+            <div class="card-header">
+                <h3>Catalogos Registrados</h3>
+                <div class="card-header-right">
+                    <button (click)="formCatalogo()" type="button" class="btn btn-success" data-toggle="modal" data-target="#demoModal">Agregar</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nombre</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngIf="isCargando">
+                                <td colspan="10">
+                                    <div class="col-12 text-center">
+                                        <img src="assets/img/loading/loader.gif" width="160px" height="120px">
+                                        <br>
+                                        <span>Espere por favor</span>
+                                    </div>
+                                    <hr>
+                                </td>
+                            </tr>
+                            <tr *ngIf="catalogos.length==0 && !isCargando">
+                                <td colspan="10" class="text-center">
+                                    No existen registros
+                                </td>
+                            </tr>
+                            <tr *ngFor="let catalogo of catalogos ; let i = index">
+                                <td>{{i+1}}</td>
+                                <td>{{catalogo.nombre}}</td>
+                                <td>
+                                    <div class="table-actions text-left">
+                                        <a (click)="verSubCatalogos(catalogo)"><i class="ik ik-eye text-info" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="Ver Sub Catalogos"></i></a>
+                                        <a (click)="verCatalogo(catalogo)" data-toggle="modal" data-target="#demoModal"><i class="ik ik-edit-1 text-info" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="Editar Catalogo"></i></a>
+                                        <a (click)="eliminarCatalogo(catalogo._id,1)"><i class="ik ik-trash text-info" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="Eliminar Catalogo"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
+    <div class="col-lg-6" *ngIf="catalogo != null">
+        <div class="card">
+            <div class="card-header">
+                <h3>
+                    Sub Items de {{catalogo.nombre}}
+                </h3>
+                <div class="card-header-right">
+                    <button (click)="formCatalogo()" type="button" class="btn btn-success" data-toggle="modal" data-target="#subCatalogoModal">Agregar Sub Catalogos</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nombre</th>
+                                <th>Valor</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr *ngIf="subCatalogos.length==0">
+                                <td colspan="10" class="text-center">
+                                    No existen registros
+                                </td>
+                            </tr>
+                            <tr *ngFor="let subCatalogo of subCatalogos ; let i = index">
+                                <td>{{i+1}}</td>
+                                <td>{{subCatalogo.nombre}}</td>
+                                <td *ngIf="catalogo.tipo=='Imagen'"><img [src]="subCatalogo.valor" style="height: 50px; width: 50px;"></td>
+                                <td *ngIf="catalogo.tipo=='Texto'">{{subCatalogo.valor}}</td>
+                                <td>
+                                    <div class="table-actions text-left">
+                                        <a (click)="eliminarCatalogo(subCatalogo._id,2)"><i class="ik ik-trash text-info" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="Eliminar Sub Catalogo"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="demoModal" tabindex="-1" role="dialog" aria-labelledby="demoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm mt-20 mb-0" role="document ">
+        <div class="modal-content ">
+            <div class="modal-header ">
+                <h5 class="modal-title " id="demoModalLabel ">Administrar Catalogo</h5>
+                <button type="button " class="close " data-dismiss="modal " aria-label="Close "><span aria-hidden="true ">&times;</span></button>
+            </div>
+            <form [formGroup]="catalogoForm" (ngSubmit)="crearCatalogo()" novalidate>
+                <div class="modal-body ">
+
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input maxlength="100" type="text" formControlName="nombre" placeholder="Ingresar Catalogo" class="form-control" name="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipoCatalogo">Tipo Catalogo</label>
+                        <select class="form-control" formControlName="tipo" name="tipo">
+                            <option>Texto</option>
+                            <option>Imagen</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer ">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button *ngIf="idCatalogo == null" (click)="crearCatalogo()" data-dismiss="modal" class="btn btn-primary ">Guardar</button>
+                    <button *ngIf="idCatalogo != null" (click)="editarCatalogo()" data-dismiss="modal" class="btn btn-success ">Actualizar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="subCatalogoModal" tabindex="-1" role="dialog" aria-labelledby="demoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm mt-20 mb-0" role="document ">
+        <div class="modal-content ">
+            <div class="modal-header ">
+                <h5 class="modal-title " id="demoModalLabel ">Crear Sub Catalogo</h5>
+                <button type="button " class="close " data-dismiss="modal " aria-label="Close "><span aria-hidden="true ">&times;</span></button>
+            </div>
+            <form [formGroup]="catalogoForm" (ngSubmit)="crearSubCatalogo()" novalidate>
+                <div class="modal-body ">
+
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input maxlength="100" type="text" formControlName="nombre" placeholder="Ingresar Sub Catalogo" class="form-control" name="nombre" required>
+                    </div>
+                    <div class="form-group" *ngIf="catalogo !=null">
+                        <label for="nombre">Valor</label>
+                        <textarea *ngIf="catalogo.tipo =='Texto'" type="file" rows="2" formControlName="valor" placeholder="Valor Sub Catalogo" class="form-control" name="valor" required></textarea>
+                        <input (change)="subirImagen($event)" *ngIf="catalogo.tipo =='Imagen'" type="file" rows="2" formControlName="valor" class="form-control" name="valor" required>
+                    </div>
+
+                </div>
+                <div class="modal-footer ">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button *ngIf="idCatalogo == null" (click)="crearSubCatalogo()" data-dismiss="modal" class="btn btn-primary ">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
