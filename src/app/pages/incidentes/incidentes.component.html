@@ -72,7 +72,8 @@
                                     <th>Identificacion</th>
                                     <th>Nombres</th>
                                     <th>Direccion</th>
-                                    <th>Incidente</th>
+                                    <th>Agente Asignado</th>
+                                    <th>Tipo de Incidente</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -97,6 +98,7 @@
                                     <td>{{incidente.persona.identificacion}}</td>
                                     <td>{{incidente.persona.nombres}} {{incidente.persona.apellidos}}</td>
                                     <td>{{incidente.direccion}}</td>
+                                    <td><span class="badge badge-pill badge-success mb-1">{{incidente.idAgente}}</span></td>
                                     <td>{{incidente.tipoIncidente.nombre}}</td>
                                     <td>
                                         <div class="table-actions text-left">
@@ -121,7 +123,7 @@
                                     <th>Identificacion</th>
                                     <th>Nombres</th>
                                     <th>Direccion</th>
-                                    <th>Incidente</th>
+                                    <th>Tipo de Incidente</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -256,6 +258,18 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-lg-6 mt-10 " *ngIf="estado =='CHG'">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Agente de Tránsito Asignado</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <b> {{incidente.idAgente}}</b>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -263,7 +277,7 @@
                 <div class="row ">
                     <div class="col-lg-12 ">
                         <button type="button " class="btn btn-secondary m-1 " data-dismiss="modal">Cerrar</button>
-                        <button data-dismiss="modal" *ngIf="estado =='GEN'" (click)="cancelarIncidente(incidente) " type="button " class="btn btn-danger list-delete m-1 ">Incidente Falso</button>
+                        <button data-dismiss="modal" *ngIf="estado =='GEN' || estado == 'CHG'" (click)="cancelarIncidente(incidente) " type="button " class="btn btn-danger list-delete m-1 ">Incidente Falso</button>
                     </div>
                 </div>
             </div>

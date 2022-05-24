@@ -101,7 +101,6 @@ export class CatalogoComponent implements OnInit {
 
   verCatalogo(catalogo) {
     this.idCatalogo = catalogo._id;
-    console.log(catalogo)
     this.catalogoForm.controls['idPadre'].setValue("0");
     this.catalogoForm.controls['nombre'].setValue(catalogo.nombre);
     //this.catalogoForm.controls['valor'].setValue(catalogo.valor);
