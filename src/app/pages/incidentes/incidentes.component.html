@@ -2,10 +2,13 @@
     <div class="card">
         <ul class="nav nav-pills custom-pills" id="pills-tab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="pills-timeline-tab" data-toggle="pill" href="#current-month" role="tab" aria-controls="pills-timeline" aria-selected="true">Linea de Tiempo</a>
+                <a class="nav-link active" (click)="obtenerIncidentes('GEN')" id="pills-timeline-tab" data-toggle="pill" href="#current-month" role="tab" aria-controls="pills-timeline" aria-selected="true">Nuevos</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#last-month" role="tab" aria-controls="pills-profile" aria-selected="false">Listado</a>
+                <a class="nav-link" (click)="obtenerIncidentes('CHG')" id="pills-profile-tab" data-toggle="pill" href="#asignados" role="tab" aria-controls="pills-profile" aria-selected="false">Asignados</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" (click)="obtenerIncidentes('CAN')" id="pills-profile-tab" data-toggle="pill" href="#falsos" role="tab" aria-controls="pills-profile" aria-selected="false">Falsos</a>
             </li>
         </ul>
         <div class="tab-content" id="pills-tabContent">
@@ -57,7 +60,58 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="last-month" role="tabpanel" aria-labelledby="pills-profile-tab">
+
+
+            <div class="tab-pane fade" id="asignados" role="tabpanel" aria-labelledby="pills-profile-tab">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Identificacion</th>
+                                    <th>Nombres</th>
+                                    <th>Direccion</th>
+                                    <th>Incidente</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="isCargando">
+                                    <td colspan="10">
+                                        <div class="col-12 text-center">
+                                            <img src="assets/img/loading/loader.gif" width="160px" height="120px">
+                                            <br>
+                                            <span>Espere por favor</span>
+                                        </div>
+                                        <hr>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="incidentes.length==0 && !isCargando">
+                                    <td colspan="10" class="text-center">
+                                        No existen registros
+                                    </td>
+                                </tr>
+                                <tr *ngFor="let incidente of incidentes ; let i = index">
+                                    <td>{{i+1}}</td>
+                                    <td>{{incidente.persona.identificacion}}</td>
+                                    <td>{{incidente.persona.nombres}} {{incidente.persona.apellidos}}</td>
+                                    <td>{{incidente.direccion}}</td>
+                                    <td>{{incidente.tipoIncidente.nombre}}</td>
+                                    <td>
+                                        <div class="table-actions text-left">
+                                            <a (click)="verIncidente(incidente)" data-toggle="modal" data-target="#viewLayoutItemNotificacion"><i class="ik ik-eye text-info" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="Ver Detalle"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="tab-pane fade" id="falsos" role="tabpanel" aria-labelledby="pills-profile-tab">
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-hover">
@@ -117,27 +171,17 @@
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title">Información del Incidente</h5>
+                <h5 class="modal-title">Información del Incidente, {{incidente.fechaCreacion | date:'shortDate'}} {{incidente.fechaCreacion | date:'mediumTime'}}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
             aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
-                <div class="alert alert-primary" role="alert">
-                    <div class="row">
-                        <div class="col-lg-6 text-center">
-                            <h5 class="text-muted d-block">Fecha Incidente</h5>
-                            <h6>{{incidente.fechaCreacion | date:'shortDate'}}</h6>
-                        </div>
-                        <div class="col-lg-4 text-center">
-                            <h5 class="text-muted d-block">Hora Incidente</h5>
-                            <h6>{{incidente.fechaCreacion | date:'mediumTime'}} </h6>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="card">
+                            <div class="card-header">
+                                <h3>Datos Persona</h3>
+                            </div>
                             <div class="card-body">
                                 <div class="text-center">
                                     <img [src]="incidente.persona.fotoCedula" width="150">
@@ -150,22 +194,64 @@
                         </div>
                     </div>
                     <div class="col-lg-6">
-                        <div class="map-box">
-                            <agm-map style="height: 245px" [zoom]="17" [latitude]="incidente.latitud" [longitude]="incidente.longitud" (mapClick)="location($event)">
-                                <agm-marker [latitude]="incidente.latitud" [longitude]="incidente.longitud">
-                                </agm-marker>
-                            </agm-map>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Ubicación Incidente</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-12 m-1">
+                                        <b> {{incidente.direccion}}</b>
+                                    </div>
+                                </div>
+                                <div class="map-box">
+                                    <agm-map style="height: 225px" [zoom]="17" [latitude]="incidente.latitud" [longitude]="incidente.longitud" (mapClick)="location($event)">
+                                        <agm-marker [latitude]="incidente.latitud" [longitude]="incidente.longitud">
+                                        </agm-marker>
+                                    </agm-map>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-lg-12">
+                    <div class="col-lg-6">
                         <div class="card">
+                            <div class="card-header">
+                                <h3>Imagenes y Descripción del Incidente</h3>
+                            </div>
                             <div class="card-body">
-                                <div class="text-center">
-                                    <img [src]="incidente.persona.fotoCedula" width="150">
-                                    <h5 class="card-title mt-10">{{incidente.persona.nombres}} {{incidente.persona.apellidos}}</h5>
-                                    <p class="card-title">{{incidente.persona.identificacion}}</p>
-                                    <h6>{{incidente.persona.correo}}</h6>
-                                    <h6>{{incidente.persona.telefono}}</h6>
+                                <div class="row">
+                                    <div class="col-lg-12 m-1">
+                                        <b> {{incidente.descripcion}}</b>
+                                    </div>
+                                    <div class="col-lg-6 text-center">
+                                        <img [src]="incidente.fotoUno==null|| ''? 'assets/img/notImage.png': 'data:image/jpg;base64,'+incidente.fotoUno " alt="foto1 " class="img-fluid rounded ">
+                                    </div>
+                                    <div class="col-lg-6 text-center">
+                                        <img [src]="incidente.fotoDos==null|| ''? 'assets/img/notImage.png': 'data:image/jpg;base64,'+incidente.fotoDos " alt="foto2 " class="img-fluid rounded ">
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mt-10 " *ngIf="estado =='GEN'">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Asignar a un Agente de Tránsito</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <div class="m-1">
+                                        <input type="text" class="form-control" [(ngModel)]="filterTerm" name="search" placeholder="Buscar">
+                                    </div>
+                                    <div class="table-responsive" style="overflow:scroll; height:180px;  overflow-x: hidden; /* Hide horizontal scrollbar */">
+                                        <table class="table">
+                                            <tr *ngFor="let agente of agentes | filter:filterTerm">
+                                                <td>{{agente.nombres}}</td>
+                                                <td><i data-dismiss="modal" (click)="asignarIncidenteAgente(agente)" class="ik ik-bell text-success" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="Asignar Incidente"></i></td>
+                                            </tr>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -173,12 +259,11 @@
                 </div>
             </div>
 
-            <div class="modal-footer">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <button type="button" class="btn btn-secondary m-1" data-dismiss="modal">Cerrar</button>
-                        <!--<button type="button"  class="btn btn-primary m-1">Editar</button>-->
-                        <button data-dismiss="modal" (click)="cancelarIncidente(incidente)" type="button" class="btn btn-danger list-delete m-1">Incidente Falso</button>
+            <div class="modal-footer ">
+                <div class="row ">
+                    <div class="col-lg-12 ">
+                        <button type="button " class="btn btn-secondary m-1 " data-dismiss="modal">Cerrar</button>
+                        <button data-dismiss="modal" *ngIf="estado =='GEN'" (click)="cancelarIncidente(incidente) " type="button " class="btn btn-danger list-delete m-1 ">Incidente Falso</button>
                     </div>
                 </div>
             </div>

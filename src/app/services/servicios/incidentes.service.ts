@@ -9,11 +9,23 @@ export class IncidentesService {
 
   constructor(private http:HttpClient) { }
 
-  obtenerIncidentes(){
-    return this.http.get(environment.URL_SERVICIOS+'/incidentes/');
+  obtenerIncidentes(estado){
+    return this.http.get(environment.URL_SERVICIOS+'/incidentes/'+estado);
   }
 
   cancelarIncidente(idIncidente,idPersona){
     return this.http.put(environment.URL_SERVICIOS+`/incidentes/reportarIncidenteFalso/${idIncidente}/CAN/${idPersona}`,'');
+  }
+
+  asignarIncidenteAgente(idIncidente,idAgente){
+    let data = {
+      idAgente,
+      estado:'CHG'
+    }
+    return this.http.put(environment.URL_SERVICIOS+'/incidentes/'+idIncidente,data);
+  }
+
+  obtenerListaAgentes(){
+    return this.http.get(environment.URL_SERVICIOS_AMT+`/findAll_Persona01_ByCriterio/*/*/*/*/*/1/500`);
   }
 }
