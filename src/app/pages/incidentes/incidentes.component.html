@@ -186,7 +186,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="text-center">
-                                    <img [src]="incidente.persona.fotoCedula" width="150">
+                                    <img [src]="'data:image/jpg;base64,'+incidente.persona.fotoCedula" width="150">
                                     <h5 class="card-title mt-10">{{incidente.persona.nombres}} {{incidente.persona.apellidos}}</h5>
                                     <p class="card-title">{{incidente.persona.identificacion}}</p>
                                     <h6>{{incidente.persona.correo}}</h6>
