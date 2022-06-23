@@ -13,6 +13,10 @@ export class IncidentesService {
     return this.http.get(environment.URL_SERVICIOS+'/incidentes/'+estado);
   }
 
+  obtenerIncidenteById(idIncidente){
+    return this.http.get(environment.URL_SERVICIOS+'/incidentes/findByIdIncidente/'+idIncidente);
+  }
+
   cancelarIncidente(idIncidente,idPersona){
     return this.http.put(environment.URL_SERVICIOS+`/incidentes/reportarIncidenteFalso/${idIncidente}/CAN/${idPersona}`,'');
   }

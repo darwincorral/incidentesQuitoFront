@@ -1,10 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import {
-  UiServicesService,
-  IncidentesService,
-} from "src/app/services/service.index";
-import * as moment from "moment";
-import { Map, tileLayer, marker, icon } from "leaflet";
+import { IncidentesService } from "src/app/services/service.index";
 import Swal from "sweetalert2";
 @Component({
   selector: "app-incidentes",
@@ -16,14 +11,13 @@ export class IncidentesComponent implements OnInit {
   incidentes = [];
   incidente = null;
   agentes = [];
-  latitude = 51.678418;
-  longitude = 7.809007;
+  latitude = -0.15985;
+  longitude = -78.42495;
   filterTerm: string = "";
-  estado = "GEN";
-  constructor(
-    private incidentesService: IncidentesService,
-    private uiService: UiServicesService
-  ) {}
+  estado = "CHG";
+  previous;
+
+  constructor(private incidentesService: IncidentesService) {}
 
   ngOnInit() {
     this.obtenerIncidentes(this.estado);
@@ -33,7 +27,20 @@ export class IncidentesComponent implements OnInit {
   location(x) {
     this.latitude = x.coords.lat;
     this.longitude = x.coords.lng;
+
+    console.log(x);
   }
+
+
+
+  markerClicked(infoWindow,incidente) {
+    console.log(incidente)
+    if (this.previous) {
+      this.previous.close();
+    }
+    this.previous = infoWindow;
+  }
+  
 
   obtenerIncidentes(estado) {
     this.estado = estado;
@@ -43,6 +50,21 @@ export class IncidentesComponent implements OnInit {
       (incidentes: any) => {
         this.isCargando = false;
         this.incidentes = incidentes.reverse();
+        let incidenteModificado;
+        let incidentesNew = [];
+        for (var incidente of this.incidentes) {
+          incidenteModificado = incidente;
+          incidenteModificado.icono = {
+            url: incidente.tipoIncidente.valor,
+            scaledSize: {
+              width: 40,
+              height: 40,
+            },
+          };
+          incidentesNew.push(incidenteModificado);
+        }
+
+        this.incidentes = incidentesNew;
       },
       (error) => {
         this.isCargando = false;
@@ -52,7 +74,30 @@ export class IncidentesComponent implements OnInit {
   }
 
   verIncidente(incidente) {
-    this.incidente = incidente;
+
+    Swal.fire({
+      title: 'Cargando Incidente',
+      text: "Por Favor espere...",
+      type: 'info',
+      //showCloseButton: true,
+      onBeforeOpen: () => {
+        Swal.showLoading()
+        this.incidente = null;
+        this.incidentesService.obtenerIncidenteById(incidente._id).subscribe(
+          (incidente: any) => {
+             Swal.close();
+            this.incidente = incidente;
+          },
+          (error) => {
+          }
+        );
+      },
+      allowOutsideClick: () => !Swal.isLoading()
+    })
+
+
+
+  
   }
 
   cancelarIncidente(incidente) {

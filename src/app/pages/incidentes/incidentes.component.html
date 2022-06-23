@@ -1,286 +1,208 @@
-<div class="col-lg-12">
-    <div class="card">
-        <ul class="nav nav-pills custom-pills" id="pills-tab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" (click)="obtenerIncidentes('GEN')" id="pills-timeline-tab" data-toggle="pill" href="#current-month" role="tab" aria-controls="pills-timeline" aria-selected="true">Nuevos</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" (click)="obtenerIncidentes('CHG')" id="pills-profile-tab" data-toggle="pill" href="#asignados" role="tab" aria-controls="pills-profile" aria-selected="false">Asignados</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" (click)="obtenerIncidentes('CAN')" id="pills-profile-tab" data-toggle="pill" href="#falsos" role="tab" aria-controls="pills-profile" aria-selected="false">Falsos</a>
-            </li>
-        </ul>
-        <div class="tab-content" id="pills-tabContent">
-            <div class="tab-pane fade active show" id="current-month" role="tabpanel" aria-labelledby="pills-timeline-tab">
-                <div class="card-body">
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h3>Incidentes Reportados</h3>
+            </div>
+            <div class="card-body">
+                <div class="map-box">
+                    <agm-map [fullscreenControl]='true' [mapTypeControl]='true' [zoom]="10.6" [latitude]="latitude" [longitude]="longitude">
+                        <agm-marker *ngFor="let incidenteItem of incidentes" [latitude]="incidenteItem.latitud" [longitude]="incidenteItem.longitud" [iconUrl]="incidenteItem.icono" (markerClick)="markerClicked(infoWindow,incidenteItem)">
+                            <agm-info-window [disableAutoPan]="true" #infoWindow [isOpen]="false">
+                                <h6 class="text-secondary fw-700">{{incidenteItem.fechaCreacion | date:'mediumTime'}}</h6>
+                                <p class="text-center m-0">{{incidenteItem.persona.nombres}} {{incidenteItem.persona.apellidos}}</p>
+                                <p class="text-center text-primary m-0">{{incidenteItem.persona.telefono}}</p>
+                                <div class="text-center"> <button (click)="verIncidente(incidenteItem)" data-toggle="modal" data-target="#viewLayoutItemNotificacion" type="button" class="btn btn-outline-primary mb-1">Revisar</button></div>
 
-                    <div *ngIf="isCargando" class="col-12 text-center">
-                        <img src="assets/img/loading/loader.gif" width="160px" height="120px">
-                        <br>
-                        <span>Espere por favor</span>
-                    </div>
-                    <div *ngIf="incidentes.length==0 && !isCargando" class="col-12 text-center">
-
-                        <span>No existen registros</span>
-                    </div>
-
-                    <div class="profiletimeline mt-0">
-                        <div class="sl-item" *ngFor="let incidente of incidentes ; let i = index">
-                            <div class="sl-left"> <img [src]="incidente.persona.fotoPerfil==null?'assets/img/user.png':'data:image/jpg;base64,'+incidente.persona.fotoPerfil" alt="user" class="rounded-circle"> </div>
-                            <div class="sl-right">
-                                <div> <a href="javascript:void(0)" class="link">{{incidente.persona.identificacion}} -  {{incidente.persona.nombres}} {{incidente.persona.apellidos}}</a>
-                                    <span class="sl-date ml-1">{{incidente.fechaCreacion | date:'short' }}</span><br>
-                                    <div class="mt-20 row">
-                                        <div class="col-md-2 col-xs-12"><img [src]="incidente.fotoUno==null||''?'assets/img/notImage.png':'data:image/jpg;base64,'+incidente.fotoUno" alt="foto1" class="img-fluid rounded">
-                                        </div>
-                                        <div class="col-md-2 col-xs-12"><img [src]="incidente.fotoDos==null||''?'assets/img/notImage.png':'data:image/jpg;base64,'+incidente.fotoDos" alt="foto2" class="img-fluid rounded">
-                                        </div>
-                                        <div class="col-md-5 col-xs-12">
-                                            <strong>Dirección</strong><br>
-                                            <p class="text-muted"> {{incidente.direccion}}</p>
-                                            <strong>Descripción</strong><br>
-                                            <p class="text-muted"> {{incidente.descripcion}}</p>
-                                            <a (click)="verIncidente(incidente)" href="#" class="btn btn-success" data-toggle="modal" data-target="#viewLayoutItemNotificacion"> Ver Detalle</a>
-                                            <a (click)="cancelarIncidente(incidente)" href="#" class="btn btn-danger ml-1"> Incidente Falso</a>
-                                        </div>
-                                        <div class="col-md-3 col-xs-12">
-                                            <div class="map-box">
-                                                <agm-map [zoom]="17" [latitude]="incidente.latitud" [longitude]="incidente.longitud" (mapClick)="location($event)">
-                                                    <agm-marker [latitude]="incidente.latitud" [longitude]="incidente.longitud">
-                                                    </agm-marker>
-                                                </agm-map>
+                            </agm-info-window>
+                        </agm-marker>
+                    </agm-map>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <ul class="nav nav-pills custom-pills" id="pills-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link" (click)="obtenerIncidentes('GEN')" id="pills-timeline-tab" data-toggle="pill" href="#current-month" role="tab" aria-selected="false">Nuevos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" (click)="obtenerIncidentes('CHG')" id="pills-timeline-tab" data-toggle="pill" href="#asignados" role="tab" aria-selected="true">Asignados</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" (click)="obtenerIncidentes('CAN')" id="pills-timeline-tab" data-toggle="pill" href="#falsos" role="tab" aria-selected="false">Falsos</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade active show" id="current-month" role="tabpanel" aria-labelledby="pills-timeline-tab">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Identificacion</th>
+                                        <th>Nombres</th>
+                                        <th>Direccion</th>
+                                        <th *ngIf="estado =='CHG'">Agente Asignado</th>
+                                        <th>Tipo de Incidente</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="isCargando">
+                                        <td colspan="10">
+                                            <div class="col-12 text-center">
+                                                <img src="assets/img/loading/loader.gif" width="160px" height="120px">
+                                                <br>
+                                                <span>Espere por favor</span>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                            <hr>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="incidentes.length==0 && !isCargando">
+                                        <td colspan="10" class="text-center">
+                                            No existen registros
+                                        </td>
+                                    </tr>
+                                    <tr *ngFor="let incidente of incidentes ; let i = index">
+                                        <td>{{i+1}}</td>
+                                        <td>{{incidente.persona.identificacion}}</td>
+                                        <td>{{incidente.persona.nombres}} {{incidente.persona.apellidos}}</td>
+                                        <td>{{incidente.direccion}}</td>
+                                        <td *ngIf="estado =='CHG'"><span class="badge badge-pill badge-success mb-1">{{incidente.idAgente}}</span></td>
+                                        <td>{{incidente.tipoIncidente.nombre}}</td>
+                                        <td>
+                                            <div class="table-actions text-left">
+                                                <a (click)="verIncidente(incidente)" data-toggle="modal" data-target="#viewLayoutItemNotificacion"><i class="ik ik-eye text-info" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="Ver Detalle"></i></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <hr>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="tab-pane fade" id="asignados" role="tabpanel" aria-labelledby="pills-profile-tab">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Identificacion</th>
-                                    <th>Nombres</th>
-                                    <th>Direccion</th>
-                                    <th>Agente Asignado</th>
-                                    <th>Tipo de Incidente</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngIf="isCargando">
-                                    <td colspan="10">
-                                        <div class="col-12 text-center">
-                                            <img src="assets/img/loading/loader.gif" width="160px" height="120px">
-                                            <br>
-                                            <span>Espere por favor</span>
-                                        </div>
-                                        <hr>
-                                    </td>
-                                </tr>
-                                <tr *ngIf="incidentes.length==0 && !isCargando">
-                                    <td colspan="10" class="text-center">
-                                        No existen registros
-                                    </td>
-                                </tr>
-                                <tr *ngFor="let incidente of incidentes ; let i = index">
-                                    <td>{{i+1}}</td>
-                                    <td>{{incidente.persona.identificacion}}</td>
-                                    <td>{{incidente.persona.nombres}} {{incidente.persona.apellidos}}</td>
-                                    <td>{{incidente.direccion}}</td>
-                                    <td><span class="badge badge-pill badge-success mb-1">{{incidente.idAgente}}</span></td>
-                                    <td>{{incidente.tipoIncidente.nombre}}</td>
-                                    <td>
-                                        <div class="table-actions text-left">
-                                            <a (click)="verIncidente(incidente)" data-toggle="modal" data-target="#viewLayoutItemNotificacion"><i class="ik ik-eye text-info" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="Ver Detalle"></i></a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="tab-pane fade" id="falsos" role="tabpanel" aria-labelledby="pills-profile-tab">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Identificacion</th>
-                                    <th>Nombres</th>
-                                    <th>Direccion</th>
-                                    <th>Tipo de Incidente</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngIf="isCargando">
-                                    <td colspan="10">
-                                        <div class="col-12 text-center">
-                                            <img src="assets/img/loading/loader.gif" width="160px" height="120px">
-                                            <br>
-                                            <span>Espere por favor</span>
-                                        </div>
-                                        <hr>
-                                    </td>
-                                </tr>
-                                <tr *ngIf="incidentes.length==0 && !isCargando">
-                                    <td colspan="10" class="text-center">
-                                        No existen registros
-                                    </td>
-                                </tr>
-                                <tr *ngFor="let incidente of incidentes ; let i = index">
-                                    <td>{{i+1}}</td>
-                                    <td>{{incidente.persona.identificacion}}</td>
-                                    <td>{{incidente.persona.nombres}} {{incidente.persona.apellidos}}</td>
-                                    <td>{{incidente.direccion}}</td>
-                                    <td>{{incidente.tipoIncidente.nombre}}</td>
-                                    <td>
-                                        <div class="table-actions text-left">
-                                            <a (click)="verIncidente(incidente)" data-toggle="modal" data-target="#viewLayoutItemNotificacion"><i class="ik ik-eye text-info" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="Ver Detalle"></i></a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 
 
 
-
-<div class="modal fade edit-layout-modal" id="viewLayoutItemNotificacion" tabindex="-1" role="dialog" aria-labelledby="viewLayoutItemNotificacion" aria-hidden="true" style="padding-right: 0px;" *ngIf="incidente!=null">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <h5 class="modal-title">Información del Incidente, {{incidente.fechaCreacion | date:'shortDate'}} {{incidente.fechaCreacion | date:'mediumTime'}}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+    <div class="modal fade edit-layout-modal" id="viewLayoutItemNotificacion" tabindex="-1" role="dialog" aria-labelledby="viewLayoutItemNotificacion" aria-hidden="true" style="padding-right: 0px;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" *ngIf="incidente!=null">
+                <div class="modal-header">
+                    <h5 class="modal-title">Información del Incidente, {{incidente.fechaCreacion | date:'shortDate'}} {{incidente.fechaCreacion | date:'mediumTime'}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
             aria-hidden="true">&times;</span></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3>Datos Persona</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="text-center">
-                                    <img [src]="'data:image/jpg;base64,'+incidente.persona.fotoCedula" width="150">
-                                    <h5 class="card-title mt-10">{{incidente.persona.nombres}} {{incidente.persona.apellidos}}</h5>
-                                    <p class="card-title">{{incidente.persona.identificacion}}</p>
-                                    <h6>{{incidente.persona.correo}}</h6>
-                                    <h6>{{incidente.persona.telefono}}</h6>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Datos Persona</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center">
+                                        <img [src]="'data:image/jpg;base64,'+incidente.persona.fotoCedula" width="150">
+                                        <h5 class="card-title mt-10">{{incidente.persona.nombres}} {{incidente.persona.apellidos}}</h5>
+                                        <p class="card-title">{{incidente.persona.identificacion}}</p>
+                                        <h6>{{incidente.persona.correo}}</h6>
+                                        <h6>{{incidente.persona.telefono}}</h6>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3>Ubicación Incidente</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-lg-12 m-1">
-                                        <b> {{incidente.direccion}}</b>
-                                    </div>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Ubicación Incidente</h3>
                                 </div>
-                                <div class="map-box">
-                                    <agm-map style="height: 225px" [zoom]="17" [latitude]="incidente.latitud" [longitude]="incidente.longitud" (mapClick)="location($event)">
-                                        <agm-marker [latitude]="incidente.latitud" [longitude]="incidente.longitud">
-                                        </agm-marker>
-                                    </agm-map>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-lg-12 m-1">
+                                            <b> {{incidente.direccion}}</b>
+                                        </div>
+                                    </div>
+                                    <div class="map-box">
+                                        <agm-map style="height: 225px" [zoom]="17" [latitude]="incidente.latitud" [longitude]="incidente.longitud" (mapClick)="location($event)">
+                                            <agm-marker [latitude]="incidente.latitud" [longitude]="incidente.longitud">
+                                            </agm-marker>
+                                        </agm-map>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3>Imagenes y Descripción del Incidente</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-lg-12 m-1">
-                                        <b> {{incidente.descripcion}}</b>
-                                    </div>
-                                    <div class="col-lg-6 text-center">
-                                        <img [src]="incidente.fotoUno==null|| ''? 'assets/img/notImage.png': 'data:image/jpg;base64,'+incidente.fotoUno " alt="foto1 " class="img-fluid rounded ">
-                                    </div>
-                                    <div class="col-lg-6 text-center">
-                                        <img [src]="incidente.fotoDos==null|| ''? 'assets/img/notImage.png': 'data:image/jpg;base64,'+incidente.fotoDos " alt="foto2 " class="img-fluid rounded ">
-                                    </div>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Imagenes y Descripción del Incidente</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-lg-12 m-1">
+                                            <b> {{incidente.descripcion}}</b>
+                                        </div>
+                                        <div class="col-lg-6 text-center">
+                                            <img [src]="incidente.fotoUno==null|| ''? 'assets/img/notImage.png': 'data:image/jpg;base64,'+incidente.fotoUno " alt="foto1 " class="img-fluid rounded ">
+                                        </div>
+                                        <div class="col-lg-6 text-center">
+                                            <img [src]="incidente.fotoDos==null|| ''? 'assets/img/notImage.png': 'data:image/jpg;base64,'+incidente.fotoDos " alt="foto2 " class="img-fluid rounded ">
+                                        </div>
 
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 mt-10 " *ngIf="estado =='GEN'">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3>Asignar a un Agente de Tránsito</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <div class="m-1">
-                                        <input type="text" class="form-control" [(ngModel)]="filterTerm" name="search" placeholder="Buscar">
-                                    </div>
-                                    <div class="table-responsive" style="overflow:scroll; height:180px;  overflow-x: hidden; /* Hide horizontal scrollbar */">
-                                        <table class="table">
-                                            <tr *ngFor="let agente of agentes | filter:filterTerm">
-                                                <td>{{agente.nombres}}</td>
-                                                <td><i data-dismiss="modal" (click)="asignarIncidenteAgente(agente)" class="ik ik-bell text-success" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="Asignar Incidente"></i></td>
-                                            </tr>
-                                        </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-6 mt-10 " *ngIf="estado =='CHG'">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3>Agente de Tránsito Asignado</h3>
+                        <div class="col-lg-6 mt-10 " *ngIf="estado =='GEN'">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Asignar a un Agente de Tránsito</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <div class="m-1">
+                                            <input type="text" class="form-control" [(ngModel)]="filterTerm" name="search" placeholder="Buscar">
+                                        </div>
+                                        <div class="table-responsive" style="overflow:scroll; height:180px;  overflow-x: hidden; /* Hide horizontal scrollbar */">
+                                            <table class="table">
+                                                <tr *ngFor="let agente of agentes | filter:filterTerm">
+                                                    <td>{{agente.nombres}}</td>
+                                                    <td><i data-dismiss="modal" (click)="asignarIncidenteAgente(agente)" class="ik ik-bell text-success" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="Asignar Incidente"></i></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <b> {{incidente.idAgente}}</b>
+                        </div>
+                        <div class="col-lg-6 mt-10 " *ngIf="estado =='CHG'">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Agente de Tránsito Asignado</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <b> {{incidente.idAgente}}</b>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="modal-footer ">
-                <div class="row ">
-                    <div class="col-lg-12 ">
-                        <button type="button " class="btn btn-secondary m-1 " data-dismiss="modal">Cerrar</button>
-                        <button data-dismiss="modal" *ngIf="estado =='GEN' || estado == 'CHG'" (click)="cancelarIncidente(incidente) " type="button " class="btn btn-danger list-delete m-1 ">Incidente Falso</button>
+                <div class="modal-footer ">
+                    <div class="row ">
+                        <div class="col-lg-12 ">
+                            <button type="button " class="btn btn-secondary m-1 " data-dismiss="modal">Cerrar</button>
+                            <button data-dismiss="modal" *ngIf="estado =='GEN' || estado == 'CHG'" (click)="cancelarIncidente(incidente) " type="button " class="btn btn-danger list-delete m-1 ">Incidente Falso</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
