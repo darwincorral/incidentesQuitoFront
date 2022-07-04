@@ -5,9 +5,10 @@
                 <h3>Incidentes Reportados</h3>
             </div>
             <div class="card-body">
+                <button type="button" class="btn btn-primary m-1" (click)="trabajarPoligono()">Trabajar Con el Poligono</button>
                 <div class="map-box">
-                    <agm-map [fullscreenControl]='true' [mapTypeControl]='true' [zoom]="10.6" [latitude]="latitude" [longitude]="longitude">
-                        <agm-marker *ngFor="let incidenteItem of incidentes" [latitude]="incidenteItem.latitud" [longitude]="incidenteItem.longitud" [iconUrl]="incidenteItem.icono" (markerClick)="markerClicked(infoWindow,incidenteItem)">
+                    <agm-map [fullscreenControl]='true' [mapTypeControl]='true' [zoom]="10.6" [latitude]="latitude" [longitude]="longitude" (mapReady)="onMapReady($event)">
+                        <agm-marker *ngFor="let incidenteItem of incidentes" [latitude]="incidenteItem.latitud" [longitude]="incidenteItem.longitud" [iconUrl]="incidenteItem.icono" (markerClick)="markerClicked($event,infoWindow,incidenteItem)">
                             <agm-info-window [disableAutoPan]="true" #infoWindow [isOpen]="false">
                                 <h6 class="text-secondary fw-700">{{incidenteItem.fechaCreacion | date:'mediumTime'}}</h6>
                                 <p class="text-center m-0">{{incidenteItem.persona.nombres}} {{incidenteItem.persona.apellidos}}</p>
@@ -16,6 +17,10 @@
 
                             </agm-info-window>
                         </agm-marker>
+                        <!-- <agm-polygon [paths]="paths" [clickable]="false">
+                        </agm-polygon>-->
+                        <!-- <agm-circle [latitude]="latitude" [longitude]="longitude" [radius]="5000" [fillColor]="'red'" [circleDraggable]="true" [editable]="true">
+                        </agm-circle>-->
                     </agm-map>
                 </div>
             </div>

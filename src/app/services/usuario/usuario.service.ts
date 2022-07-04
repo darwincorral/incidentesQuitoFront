@@ -14,6 +14,7 @@ import Swal from 'sweetalert2'
 export class UsuarioService {
   usuario: string;
   nombre: string;
+  menu: any[] = [];
   keyApp = '_'+environment.nombreAplicaion + '_' + parseInt(environment.idAplicacion);
   constructor(
     private http:HttpClient,
@@ -31,27 +32,30 @@ export class UsuarioService {
     if ( JSON.parse(localStorage.getItem('key'+this.keyApp)) == this.keyApp && localStorage.getItem('login'+this.keyApp)) {
       this.usuario = localStorage.getItem('login'+this.keyApp) ;
       this.nombre = localStorage.getItem('nombreUsuario'+this.keyApp) ;
+      this.menu = JSON.parse( localStorage.getItem('menu'+this.keyApp))
     } else {
       this.usuario = "";
       this.nombre="";
+      this.menu = [];
     }
   }
 
 
-  guardarStorage( usuario:string, rol:string, nombre:string ) {
+  guardarStorage( usuario:string,menu:any, rol:string, nombre:string ) {
     localStorage.setItem('key'+this.keyApp, JSON.stringify(this.keyApp));
     localStorage.setItem('login'+this.keyApp, usuario );
     localStorage.setItem('rol'+this.keyApp, rol );
     localStorage.setItem('nombreUsuario'+this.keyApp,nombre);
+    localStorage.setItem('menu'+this.keyApp, JSON.stringify(menu));
     this.usuario = usuario;
     this.nombre = nombre;
-
+    this.menu = menu;
   }
 
   logout() {
     this.usuario = "";
     this.nombre = "";
-    
+    this.menu = [];
     localStorage.removeItem('login'+this.keyApp);
     localStorage.removeItem('menu'+this.keyApp);
     localStorage.removeItem('rol'+this.keyApp);
@@ -80,7 +84,7 @@ export class UsuarioService {
         return false;
       }else{
         let respuesta = resp.retorno
-        this.guardarStorage(respuesta.usuario.usuario, respuesta.perfil.nombrePerfil, respuesta.cabeceraPersona.nombrePersona+' '+respuesta.cabeceraPersona.apellidoPersona);
+        this.guardarStorage(respuesta.usuario.usuario, respuesta.lsMenu, respuesta.perfil.nombrePerfil, respuesta.cabeceraPersona.nombrePersona+' '+respuesta.cabeceraPersona.apellidoPersona);
         return true;
       }
       })

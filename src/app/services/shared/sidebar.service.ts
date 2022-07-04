@@ -5,8 +5,8 @@ import { UsuarioService } from '../usuario/usuario.service';
   providedIn: 'root'
 })
 export class SidebarService {
-
-  menu:any = [
+  menu:any[]=[];
+ /* menu:any = [
     {
       titulo: 'Incidentes',
       icono: 'ik ik-align-justify',
@@ -29,9 +29,13 @@ export class SidebarService {
         { titulo: 'Perfil', url: '/perfil' },
       ]
     }
-  ];
-  constructor() {
+  ];*/
+  constructor(public _usuarioService: UsuarioService) {
 
+  }
+
+  cargarMenu(){
+    this.menu = this._usuarioService.menu;
   }
 
 }

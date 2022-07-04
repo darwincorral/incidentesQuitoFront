@@ -67,7 +67,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>Nombre</th>
-                                <th>Valor</th>
+                                <th class="text-center">Valor</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -81,11 +81,14 @@
                             <tr *ngFor="let subCatalogo of subCatalogos ; let i = index">
                                 <td>{{i+1}}</td>
                                 <td>{{subCatalogo.nombre}}</td>
-                                <td *ngIf="catalogo.tipo=='Imagen'"><img [src]="subCatalogo.valor" style="height: 50px; width: 50px;"></td>
-                                <td *ngIf="catalogo.tipo=='Texto'">{{subCatalogo.valor}}</td>
+                                <td *ngIf="catalogo.tipo=='Imagen'" class="text-center"><img [src]="subCatalogo.valor" style="height: 50px; width: 50px;"></td>
+                                <td *ngIf="catalogo.tipo=='Texto'" class="text-center">{{subCatalogo.valor}}</td>
+                                <td *ngIf="catalogo.tipo=='Mapa'" class="text-center">
+                                    <a (click)="verMapa(subCatalogo.valor,subCatalogo.nombre)" data-toggle="modal" data-target="#mapaPoligono"><i class="ik ik-map-pin text-primary" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="Ver Mapa"></i></a>
+                                </td>
                                 <td>
                                     <div class="table-actions text-left">
-                                        <a (click)="eliminarCatalogo(subCatalogo._id,2)"><i class="ik ik-trash text-info" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="Eliminar Sub Catalogo"></i></a>
+                                        <a (click)="eliminarCatalogo(subCatalogo._id,2)"><i class="ik ik-trash text-danger" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="Eliminar Sub Catalogo"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -117,6 +120,7 @@
                         <select class="form-control" formControlName="tipo" name="tipo">
                             <option>Texto</option>
                             <option>Imagen</option>
+                            <option>Mapa</option>
                         </select>
                     </div>
                 </div>
@@ -132,7 +136,7 @@
 
 
 <div class="modal fade" id="subCatalogoModal" tabindex="-1" role="dialog" aria-labelledby="demoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm mt-20 mb-0" role="document ">
+    <div class="modal-dialog modal-md mt-20 mb-0" role="document ">
         <div class="modal-content ">
             <div class="modal-header ">
                 <h5 class="modal-title " id="demoModalLabel ">Crear Sub Catalogo</h5>
@@ -149,14 +153,36 @@
                         <label for="nombre">Valor</label>
                         <textarea *ngIf="catalogo.tipo =='Texto'" type="file" rows="2" formControlName="valor" placeholder="Valor Sub Catalogo" class="form-control" name="valor" required></textarea>
                         <input (change)="subirImagen($event)" *ngIf="catalogo.tipo =='Imagen'" type="file" rows="2" formControlName="valor" class="form-control" name="valor" required>
-                    </div>
 
+                        <agm-map *ngIf="catalogo.tipo =='Mapa'" [mapTypeControl]='true' [zoom]="10.6" [latitude]="latitude" [longitude]="longitude" (mapReady)="onMapReady($event)"></agm-map>
+                    </div>
+                    <div class="form-group text-center" *ngIf="catalogo !=null && catalogo.tipo =='Mapa' && selectedArea >0">
+                        <button type="button" class="btn btn-danger" (click)="deleteSelectedShape()">Eliminar Poligono</button>
+                    </div>
                 </div>
                 <div class="modal-footer ">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                     <button *ngIf="idCatalogo == null" (click)="crearSubCatalogo()" data-dismiss="modal" class="btn btn-primary ">Guardar</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="mapaPoligono" tabindex="-1" role="dialog" aria-labelledby="demoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md mt-20 mb-0" role="document ">
+        <div class="modal-content ">
+            <div class="modal-header ">
+                <h5 class="modal-title " id="demoModalLabel ">{{nombreMapa}}</h5>
+                <button type="button " class="close " data-dismiss="modal " aria-label="Close "><span aria-hidden="true ">&times;</span></button>
+            </div>
+            <div class="modal-body ">
+                <agm-map [mapTypeControl]='true' [zoom]="10.6" [latitude]="latitude" [longitude]="longitude">
+                    <agm-polygon [paths]="poligono" [clickable]="false">
+                    </agm-polygon>
+                </agm-map>
+            </div>
         </div>
     </div>
 </div>

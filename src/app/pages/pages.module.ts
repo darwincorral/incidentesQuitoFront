@@ -54,7 +54,8 @@ imports:[
     MatProgressSpinnerModule,
     Ng2SearchPipeModule,
     AgmCoreModule.forRoot({
-        apiKey: ''
+        apiKey: '',
+        libraries: ['drawing']
       })
 ]
 

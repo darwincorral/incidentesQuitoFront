@@ -10,10 +10,11 @@
         <div class="nav-container">
             <nav id="main-menu-navigation" class="navigation-main">
                 <div class="nav-lavel">Navegación</div>
-                <div *ngFor="let menu of _sidebar.menu">
-                    <div class="nav-item" routerLinkActive="active">
-                        <a [routerLink]="[menu.url]"><i [class]="menu.icono" ></i><span>{{menu.titulo}}</span></a>
-
+                <div class="nav-item" [ngClass]="{'has-sub':menu.lstMenuHijos.length >0}" routerLinkActive="active open" *ngFor="let menu of _sidebar.menu">
+                    <a *ngIf="menu.lstMenuHijos.length >0"><i [class]="menu.icono"></i><span>{{menu.descripcionCorta}}</span></a>
+                    <a *ngIf="menu.lstMenuHijos.length ==0" [routerLink]="[menu.path]"><i [class]="menu.icono"></i><span>{{menu.descripcionCorta}}</span></a>
+                    <div class="submenu-content" *ngFor="let submenu of menu.lstMenuHijos">
+                        <a [routerLink]="[submenu.path]" class="menu-item" routerLinkActive="active">{{submenu.descripcionCorta}}</a>
                     </div>
                 </div>
             </nav>
