@@ -41,4 +41,8 @@ export class UiServicesService {
 
     return this.http.post(environment.URL_SERVICIOS_CORREO,dataMail);
   }
+
+  obtenerOperadores(){
+    return this.http.get(environment.URL_SERVICIOS_SEGURIDAD +`/perfil/getListPerfilByIdApp/225`);
+  }
 }

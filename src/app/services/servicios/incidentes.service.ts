@@ -30,7 +30,7 @@ export class IncidentesService {
   }
 
   obtenerListaAgentes(){
-    return this.http.get(environment.URL_SERVICIOS_AMT+`/findAll_Persona01_ByCriterio/*/*/*/*/*/1/500`);
+    return this.http.get(environment.URL_SERVICIOS_SEGURIDAD +`/personal/findAll_Persona01_ByCriterio/*/*/*/*/*/1/500`);
   }
 
   obtenerTotalIncidentes(tipoIncidente){

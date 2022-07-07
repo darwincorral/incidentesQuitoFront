@@ -71,7 +71,7 @@ export class UsuarioService {
     }else{
       localStorage.removeItem('usuario'+this.keyApp);
     }
-    let url = environment.URL_SERVICIOS_SEGURIDAD + '/login/';
+    let url = environment.URL_SERVICIOS_SEGURIDAD + '/usuario/login/';
     return this.http.get(url+usuario.usuario.toUpperCase()+"/"+usuario.password+"/"+environment.idAplicacion)
     .map((resp:any)=>{
       if(resp.codRetorno == '0010'){
@@ -105,11 +105,11 @@ export class UsuarioService {
         'oldPassword':formPassword.passwordOld,
         'newPassword':formPassword.passwordNew
       }
-      return this.http.post(environment.URL_SERVICIOS_SEGURIDAD+'/updatePassword',form)
+      return this.http.post(environment.URL_SERVICIOS_SEGURIDAD+'/usuario/updatePassword',form)
   }
 
   getPersona(){
-    return this.http.get(environment.URL_SERVICIOS_SEGURIDAD+'/perfil/'+this.usuario+'/'+environment.idAplicacion)
+    return this.http.get(environment.URL_SERVICIOS_SEGURIDAD+'/usuario/perfil/'+this.usuario+'/'+environment.idAplicacion)
   }
 
 
@@ -123,11 +123,11 @@ export class UsuarioService {
         'mail':formUser.correo
       }
     }
-    return this.http.post(environment.URL_SERVICIOS_SEGURIDAD+'/updateCabeceraPersona',form)
+    return this.http.post(environment.URL_SERVICIOS_SEGURIDAD+'/usuario/updateCabeceraPersona',form)
   }
 
   recuperarPass(cedula){
-    return this.http.get(environment.URL_SERVICIOS_SEGURIDAD+'/forgotPassword/'+cedula)
+    return this.http.get(environment.URL_SERVICIOS_SEGURIDAD+'/usuario/forgotPassword/'+cedula)
   }
 
 }

@@ -4,10 +4,9 @@
 
 export const environment = {
   //APIS
-  URL_SERVICIOS_SEGURIDAD : 'http://186.47.204.225:10264/testmicro_seguridades/usuario',
+  URL_SERVICIOS_SEGURIDAD : 'http://186.47.204.225:10264/testmicro_seguridades',
   URL_SERVICIOS_CORREO : 'http://186.47.204.233:8080/micro_sendMail-0.0.1/mail/sendBasic',
-  URL_SERVICIOS : 'http://localhost:3000',
-  URL_SERVICIOS_AMT:'http://servicios.amt.gob.ec:10664/micro_seguridades/personal',
+  URL_SERVICIOS : 'http://servicios.amt.gob.ec:5001',
 
   //ID DE APLICACION DE LA BD
   idAplicacion: '225',

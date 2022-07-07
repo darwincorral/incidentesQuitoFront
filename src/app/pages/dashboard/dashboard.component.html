@@ -83,6 +83,36 @@
                 <h3>Asignar Zonas a Operadores</h3>
             </div>
             <div class="card-body">
+                <div class="form-group col-lg-6">
+                    <label for="exampleInputUsername1">Buscar Operador</label>
+                    <input type="text" class="form-control" id="exampleInputUsername1" placeholder="">
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Operador</th>
+                                <th>Identificación</th>
+                                <th class="text-center">Zona</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr *ngIf="operadores.length==0">
+                                <td colspan="10" class="text-center">
+                                    No existen registros
+                                </td>
+                            </tr>
+                            <tr *ngFor="let operador of operadores ; let i = index">
+                                <td>{{i+1}}</td>
+                                <td>{{operador.nombrePersona}} {{operador.apellidoPersona}}</td>
+                                <td>{{operador.numeroIdentificacion}}</td>
+                                <td class="text-center"><a href="#" class="badge badge-danger mb-1">Sin zona</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -92,6 +122,17 @@
                 <h3>Reportes Rápidos</h3>
             </div>
             <div class="card-body">
+                <div class="map-box">
+                    <agm-map [fullscreenControl]='true' [mapTypeControl]='true' [zoom]="10.6" [latitude]="latitude" [longitude]="longitude">
+                        <agm-marker *ngFor="let incidenteItem of incidentes" [latitude]="incidenteItem.latitud" [longitude]="incidenteItem.longitud" [iconUrl]="incidenteItem.icono" (markerClick)="markerClicked(infoWindow)">
+                            <agm-info-window [disableAutoPan]="true" #infoWindow [isOpen]="false">
+                                <h6 class="text-secondary fw-700">{{incidenteItem.fechaCreacion | date:'mediumTime'}}</h6>
+                                <p class="text-center m-0">{{incidenteItem.persona.nombres}} {{incidenteItem.persona.apellidos}}</p>
+                                <p class="text-center text-primary m-0">{{incidenteItem.persona.telefono}}</p>
+                            </agm-info-window>
+                        </agm-marker>
+                    </agm-map>
+                </div>
             </div>
         </div>
     </div>
