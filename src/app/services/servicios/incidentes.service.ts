@@ -36,4 +36,9 @@ export class IncidentesService {
   obtenerTotalIncidentes(tipoIncidente){
     return this.http.get(environment.URL_SERVICIOS+'/incidentes/findCountAll/'+tipoIncidente);
   }
+
+  
+  obtenerZonas(){
+    return this.http.get(environment.URL_SERVICIOS+'/catalogo/findIdPadre/62c149bed2543a1ac1d61fdb');
+  }
 }

@@ -126,24 +126,27 @@
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label for="exampleSelectGender">Zonas</label>
-                            <select class="form-control" id="exampleSelectGender">
-                                <option>Male</option>
+                            <select class="form-control" id="exampleSelectGender"  (change)="seleccionarZona($event.target.value)">
+                                <option *ngFor="let zona of zonas" [value]="zona.valor">{{zona.nombre}}
+                                </option>
                             </select>
                         </div>
                     </div>
                     <div class="col-lg-8 text-right">
-                        <br> <label style="font-size: 20px" class="col-form-label">Total de Incidentes: <strong>25</strong></label>
+                        <br> <label style="font-size: 20px" class="col-form-label">Total de Incidentes: <strong>{{incidentesFilter.length}}</strong></label>
                     </div>
                 </div>
                 <div class="map-box">
                     <agm-map [fullscreenControl]='true' [mapTypeControl]='true' [zoom]="10.6" [latitude]="latitude" [longitude]="longitude">
-                        <agm-marker *ngFor="let incidenteItem of incidentes" [latitude]="incidenteItem.latitud" [longitude]="incidenteItem.longitud" [iconUrl]="incidenteItem.icono" (markerClick)="markerClicked(infoWindow)">
+                        <agm-marker *ngFor="let incidenteItem of incidentesFilter" [latitude]="incidenteItem.latitud" [longitude]="incidenteItem.longitud" [iconUrl]="incidenteItem.icono" (markerClick)="markerClicked(infoWindow)">
                             <agm-info-window [disableAutoPan]="true" #infoWindow [isOpen]="false">
                                 <h6 class="text-secondary fw-700">{{incidenteItem.fechaCreacion | date:'mediumTime'}}</h6>
                                 <p class="text-center m-0">{{incidenteItem.persona.nombres}} {{incidenteItem.persona.apellidos}}</p>
                                 <p class="text-center text-primary m-0">{{incidenteItem.persona.telefono}}</p>
                             </agm-info-window>
                         </agm-marker>
+                        <agm-polygon [paths]="poligono" [clickable]="false">
+                        </agm-polygon>
                     </agm-map>
                 </div>
             </div>
