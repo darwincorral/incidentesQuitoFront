@@ -14,13 +14,18 @@ export class LoginGuardGuard implements CanActivate {
   canActivate() {
 
     if ( this._usuarioService.estaLogueado() ) {
-    //  console.log( 'PASO EL GUARD');
+
+    /*  if ( this._usuarioService.rol === 'ADMINISTRADOR' ) {
+        return true;
+      }else {
+        console.log(this._usuarioService.rol)
+        this.router.navigate(['/incidentes']);
+        return false;
+      }*/
       return true;
     } else {
-    //  console.log( 'Bloqueado por guard' );
       this.router.navigate(['/login']);
       return false;
     }
-//return true
   }
 }

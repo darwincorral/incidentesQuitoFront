@@ -16,6 +16,7 @@ export class UsuarioService {
   nombre: string;
   menu: any[] = [];
   keyApp = '_'+environment.nombreAplicaion + '_' + parseInt(environment.idAplicacion);
+  rol: string;
   constructor(
     private http:HttpClient,
     public router: Router
@@ -32,10 +33,12 @@ export class UsuarioService {
     if ( JSON.parse(localStorage.getItem('key'+this.keyApp)) == this.keyApp && localStorage.getItem('login'+this.keyApp)) {
       this.usuario = localStorage.getItem('login'+this.keyApp) ;
       this.nombre = localStorage.getItem('nombreUsuario'+this.keyApp) ;
+      this.rol = localStorage.getItem('rol'+this.keyApp);
       this.menu = JSON.parse( localStorage.getItem('menu'+this.keyApp))
     } else {
       this.usuario = "";
       this.nombre="";
+      this.rol = "";
       this.menu = [];
     }
   }
@@ -49,12 +52,14 @@ export class UsuarioService {
     localStorage.setItem('menu'+this.keyApp, JSON.stringify(menu));
     this.usuario = usuario;
     this.nombre = nombre;
+    this.rol = rol;
     this.menu = menu;
   }
 
   logout() {
     this.usuario = "";
     this.nombre = "";
+    this.rol = "";
     this.menu = [];
     localStorage.removeItem('login'+this.keyApp);
     localStorage.removeItem('menu'+this.keyApp);

@@ -1,3 +1,4 @@
+export { AdminGuard } from './guards/admin.guard';
 export { CatalogosService } from './servicios/catalogos.service';
 export { IncidentesService } from './servicios/incidentes.service';
 export { RedirectGuard } from './guards/redirect.guard';

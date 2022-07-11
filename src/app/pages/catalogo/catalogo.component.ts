@@ -28,6 +28,7 @@ export class CatalogoComponent implements OnInit {
 
   poligono =[];
   nombreMapa;
+  filterTerm: string;
 
   constructor(private catalogosService: CatalogosService) {}
 

@@ -6,6 +6,7 @@ import { PerfilComponent } from './perfil/perfil.component';
 import { LoginGuardGuard } from '../services/service.index';
 import { IncidentesComponent } from './incidentes/incidentes.component';
 import { CatalogoComponent } from './catalogo/catalogo.component';
+import { AdminGuard } from '../services/guards/admin.guard';
 
 const pagesRoutes: Routes = [
     {
@@ -13,11 +14,11 @@ const pagesRoutes: Routes = [
         component: PagesComponent,
         canActivate:[LoginGuardGuard],
         children: [
-            { path: 'dashboard', component: DashboardComponent, data:{ titulo: 'Dashboard', descripcion:'Pagina de Inicio', icon:'ik ik-align-justify'} },
+            { path: 'dashboard', component: DashboardComponent,canActivate:[AdminGuard], data:{ titulo: 'Dashboard', descripcion:'Pagina de Inicio', icon:'ik ik-align-justify'} },
             { path: 'incidentes', component: IncidentesComponent, data:{ titulo: 'Incidentes', descripcion:'Adminsitración de Incidentes', icon:'ik ik-align-justify'} },
             { path: 'catalogos', component: CatalogoComponent, data:{ titulo: 'Catalogo', descripcion:'Administración de Catalogos', icon:'ik ik-align-justify'} },
             { path: 'perfil', component: PerfilComponent, data:{ titulo: 'Mi Perfil', descripcion:'Personaliza tus datos', icon:'ik ik-user'}  },
-            { path: '', redirectTo: '/incidentes', pathMatch: 'full' }
+            { path: '', redirectTo: '/dashboard', pathMatch: 'full' }
         ]
     }
 ];

@@ -36,6 +36,12 @@ export class SidebarService {
 
   cargarMenu(){
     this.menu = this._usuarioService.menu;
+    this.menu.push({
+      descripcionCorta: 'Mi Perfil',
+      icono: 'ik ik-user',
+      path: '/perfil',
+      lstMenuHijos:[]
+    })
   }
 
 }
