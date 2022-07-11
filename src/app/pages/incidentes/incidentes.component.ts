@@ -4,7 +4,7 @@ import {
   UsuarioService,
 } from "src/app/services/service.index";
 import Swal from "sweetalert2";
-import * as XLSX from 'xlsx';
+
 @Component({
   selector: "app-incidentes",
   templateUrl: "./incidentes.component.html",
@@ -90,15 +90,6 @@ export class IncidentesComponent implements OnInit {
           (zonas: any) => {
             Swal.close();
             this.zonas = zonas;
-
-            // const data = this.zonas.map(c => ({ 'LastName': c.valor, 'Age': c.nombre }));
-            // const ws = XLSX.utils.json_to_sheet(data);
-            //const wb: XLSX.WorkBook = XLSX.utils.book_new();
-            //XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-            /* save to file */
-            //XLSX.writeFile(wb, 'SheetJS.xlsx');
-            //reportes de incidentes por zona, usuario, fecha 
-            //ver incidentes por operador, ordenar menu reportes
           },
           (error) => {
             Swal.close();
@@ -111,6 +102,7 @@ export class IncidentesComponent implements OnInit {
 
   obtetenerZonaOperador() {
     this.operador = this.usuarioService.persona;
+    console.log(this.operador);
       this.incidentesService .obtenerZonasOperadores().subscribe((zonaOperadores: any) => {
           for (let zonaOperador of zonaOperadores)
             if (zonaOperador.nombre == this.operador.numeroIdentificacion) {
@@ -198,7 +190,7 @@ export class IncidentesComponent implements OnInit {
     }).then((result) => {
       if (result.value) {
         this.incidentesService
-          .cancelarIncidente(incidente._id, incidente.persona._id)
+          .cancelarIncidente(incidente._id, incidente.persona._id,this.operador.numeroIdentificacion)
           .subscribe(
             (incidente: any) => {
               this.obtenerIncidentes(this.estado);
@@ -219,7 +211,6 @@ export class IncidentesComponent implements OnInit {
   }
 
   asignarIncidenteAgente(agente) {
-    console.log(agente)
     Swal.fire({
       title: "Importante!",
       text: "Esta seguro de asignar el Incidente?",
@@ -230,7 +221,7 @@ export class IncidentesComponent implements OnInit {
     }).then((result) => {
       if (result.value) {
         this.incidentesService
-          .asignarIncidenteAgente(this.incidente._id, agente.cpNomb +' '+agente.cpApel)
+          .asignarIncidenteAgente(this.incidente._id, agente.cpNomb +' '+agente.cpApel,this.operador.numeroIdentificacion)
           .subscribe(
             (incidente: any) => {
               this.obtenerIncidentes(this.estado);

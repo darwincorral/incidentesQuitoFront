@@ -14,14 +14,6 @@ export class LoginGuardGuard implements CanActivate {
   canActivate() {
 
     if ( this._usuarioService.estaLogueado() ) {
-
-    /*  if ( this._usuarioService.rol === 'ADMINISTRADOR' ) {
-        return true;
-      }else {
-        console.log(this._usuarioService.rol)
-        this.router.navigate(['/incidentes']);
-        return false;
-      }*/
       return true;
     } else {
       this.router.navigate(['/login']);
