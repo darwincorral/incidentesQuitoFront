@@ -41,4 +41,16 @@ export class IncidentesService {
   obtenerZonas(){
     return this.http.get(environment.URL_SERVICIOS+'/catalogo/findIdPadre/62c149bed2543a1ac1d61fdb');
   }
+
+  obtenerZonasOperadores(){
+    return this.http.get(environment.URL_SERVICIOS+'/catalogo/findIdPadre/62ca2b719df419b66a5c47ef');
+  }
+
+  asignarZona(formData){
+    return this.http.post(environment.URL_SERVICIOS+'/catalogo/',formData);
+  }
+
+  actualizarZona(formData,idCatalogo){
+    return this.http.put(environment.URL_SERVICIOS+'/catalogo/'+idCatalogo,formData);
+  }
 }

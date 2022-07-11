@@ -84,8 +84,7 @@
             </div>
             <div class="card-body">
                 <div class="form-group col-lg-6">
-                    <label for="exampleInputUsername1">Buscar Operador</label>
-                    <input type="text" class="form-control" id="exampleInputUsername1" placeholder="">
+                    <input type="text" class="form-control" id="exampleInputUsername1" [(ngModel)]="filterTerm" placeholder="Buscar Operador">
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover">
@@ -104,11 +103,17 @@
                                     No existen registros
                                 </td>
                             </tr>
-                            <tr *ngFor="let operador of operadores ; let i = index">
+                            <tr *ngFor="let operador of operadores | filter:filterTerm; let i = index">
                                 <td>{{i+1}}</td>
-                                <td>{{operador.nombrePersona}} {{operador.apellidoPersona}}</td>
+                                <td>{{operador.nombres}}</td>
                                 <td>{{operador.numeroIdentificacion}}</td>
-                                <td class="text-center"><a href="#" class="badge badge-danger mb-1">Sin zona</a></td>
+                                <td class="text-center">
+                                    <select class="form-control" id="exampleSelectGender" (change)="seleccionarZonaOperador($event.target.value, operador)">
+                                        <option  disabled >Sin Asignacion</option>
+                                        <option *ngFor="let zona of zonas" [value]="zona._id" [selected]="operador.zona == zona.nombre">{{zona.nombre}}
+                                        </option>
+                                    </select>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -123,16 +128,16 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-lg-4">
+                    <div class="col-lg-5">
                         <div class="form-group">
                             <label for="exampleSelectGender">Zonas</label>
-                            <select class="form-control" id="exampleSelectGender"  (change)="seleccionarZona($event.target.value)">
+                            <select class="form-control" id="exampleSelectGender" (change)="seleccionarZona($event.target.value)">
                                 <option *ngFor="let zona of zonas" [value]="zona.valor">{{zona.nombre}}
                                 </option>
                             </select>
                         </div>
                     </div>
-                    <div class="col-lg-8 text-right">
+                    <div class="col-lg-7 text-right">
                         <br> <label style="font-size: 20px" class="col-form-label">Total de Incidentes: <strong>{{incidentesFilter.length}}</strong></label>
                     </div>
                 </div>

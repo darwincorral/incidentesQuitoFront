@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import Swal from "sweetalert2";
-import { IncidentesService } from "src/app/services/service.index";
+import { CatalogosService, IncidentesService } from "src/app/services/service.index";
 import { UiServicesService } from "../../services/servicios/ui-services.service";
 @Component({
   selector: "app-dashboard",
@@ -13,18 +13,21 @@ export class DashboardComponent implements OnInit {
   falsos = 0;
   atendidos = 0;
   tipoIncidente = "*";
-  operadores = [];
+
   incidentes = [];
   incidentesFilter = [];
+
   latitude = -0.15985;
   longitude = -78.42495;
   previous;
   zonas = [];
   poligono = [];
-
+  operadores = [];
+  filterTerm: string;
   constructor(
     private incidentesService: IncidentesService,
-    private uiService: UiServicesService
+    private uiService: UiServicesService,
+    private catalogosService: CatalogosService
   ) {}
 
   ngOnInit() {
@@ -114,8 +117,29 @@ export class DashboardComponent implements OnInit {
         this.uiService.obtenerOperadores().subscribe(
           (operadores: any) => {
             Swal.close();
-            this.operadores = operadores.retorno[1].listPerfilListUsuarioDTO;
-            console.log(this.operadores);
+            let operadoresAMT = operadores.retorno[1].listPerfilListUsuarioDTO;
+            this.incidentesService.obtenerZonasOperadores().subscribe(
+              (operadoresZonasCatalogo: any) => {
+                for (let operadorAMT of operadoresAMT) {
+                  const result = operadoresZonasCatalogo.filter(operadorZonaCatalogo => operadorZonaCatalogo.nombre == operadorAMT.numeroIdentificacion);
+                      if(result.length==0){
+                        this.operadores.push({
+                        nombres: operadorAMT.nombrePersona + " "+ operadorAMT.apellidoPersona,
+                        numeroIdentificacion:operadorAMT.numeroIdentificacion,
+                        zona: 'Sin Asignacion',
+                        idCatalogo: null
+                      });
+                      }else{
+                        this.operadores.push({
+                          nombres: operadorAMT.nombrePersona + " "+ operadorAMT.apellidoPersona,
+                          numeroIdentificacion:operadorAMT.numeroIdentificacion,
+                          zona: result[0].valor,
+                          idCatalogo: result[0]._id
+                        });
+                      }
+                }
+              }
+            );
           },
           (error) => {
             Swal.close();
@@ -195,4 +219,33 @@ export class DashboardComponent implements OnInit {
     }
     return c;
   }
+
+  seleccionarZonaOperador(idZona, operador) {
+    let zonaOperador = this.zonas.filter((value) => value._id === idZona);
+    let formData = {
+      "idPadre":"62ca2b719df419b66a5c47ef",
+      "nombre":operador.numeroIdentificacion,
+      "valor": zonaOperador[0]['nombre'],
+      "tipo":"Texto"
+    };
+    if(operador.idCatalogo ==null){
+      this.incidentesService.asignarZona(formData).subscribe(
+      (resultado: any) => {
+        Swal.fire("Zona Asignada Correctamente", "", "success");
+      },
+      (error) => {
+        Swal.fire("Ocurrio un error al ingresar los datos", "", "error");
+      }
+    );
+    }else{
+      this.incidentesService.actualizarZona(formData,operador.idCatalogo).subscribe(
+        (resultado: any) => {
+          Swal.fire("Zona Actualizada Correctamente", "", "success");
+        },
+        (error) => {
+          Swal.fire("Ocurrio un error al ingresar los datos", "", "error");
+        });
+    }
+  }
+
 }
