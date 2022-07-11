@@ -50,7 +50,7 @@ export class DashboardComponent implements OnInit {
           .subscribe(
             (total: any) => {
               Swal.close();
-              this.nuevos = total.listAsignados;
+              this.asignados = total.listAsignados;
               this.nuevos = total.listNuevos;
               this.falsos = total.listFalsos;
               this.atendidos = total.listAtendidos;

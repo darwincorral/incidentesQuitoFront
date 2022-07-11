@@ -14,6 +14,7 @@ import Swal from 'sweetalert2'
 export class UsuarioService {
   usuario: string;
   nombre: string;
+  persona: any[] = [];
   menu: any[] = [];
   keyApp = '_'+environment.nombreAplicaion + '_' + parseInt(environment.idAplicacion);
   rol: string;
@@ -31,29 +32,33 @@ export class UsuarioService {
 
   cargarStorage() {
     if ( JSON.parse(localStorage.getItem('key'+this.keyApp)) == this.keyApp && localStorage.getItem('login'+this.keyApp)) {
-      this.usuario = localStorage.getItem('login'+this.keyApp) ;
-      this.nombre = localStorage.getItem('nombreUsuario'+this.keyApp) ;
+      this.usuario = localStorage.getItem('login'+this.keyApp);
+      this.nombre = localStorage.getItem('nombreUsuario'+this.keyApp);
+      this.persona = JSON.parse(localStorage.getItem('persona'+this.keyApp));
       this.rol = localStorage.getItem('rol'+this.keyApp);
       this.menu = JSON.parse( localStorage.getItem('menu'+this.keyApp))
     } else {
       this.usuario = "";
       this.nombre="";
       this.rol = "";
+      this.persona = [];
       this.menu = [];
     }
   }
 
 
-  guardarStorage( usuario:string,menu:any, rol:string, nombre:string ) {
+  guardarStorage( usuario:string,menu:any, rol:string, nombre:string, persona:any ) {
     localStorage.setItem('key'+this.keyApp, JSON.stringify(this.keyApp));
     localStorage.setItem('login'+this.keyApp, usuario );
     localStorage.setItem('rol'+this.keyApp, rol );
     localStorage.setItem('nombreUsuario'+this.keyApp,nombre);
     localStorage.setItem('menu'+this.keyApp, JSON.stringify(menu));
+    localStorage.setItem('persona'+this.keyApp, JSON.stringify(persona));
     this.usuario = usuario;
     this.nombre = nombre;
     this.rol = rol;
     this.menu = menu;
+    this.persona = persona;
   }
 
   logout() {
@@ -61,8 +66,10 @@ export class UsuarioService {
     this.nombre = "";
     this.rol = "";
     this.menu = [];
+    this.persona = [];
     localStorage.removeItem('login'+this.keyApp);
     localStorage.removeItem('menu'+this.keyApp);
+    localStorage.removeItem('persona'+this.keyApp);
     localStorage.removeItem('rol'+this.keyApp);
     localStorage.removeItem('key'+this.keyApp);
     localStorage.removeItem('nombreUsuario'+this.keyApp);
@@ -89,7 +96,7 @@ export class UsuarioService {
         return false;
       }else{
         let respuesta = resp.retorno
-        this.guardarStorage(respuesta.usuario.usuario, respuesta.lsMenu, respuesta.perfil.nombrePerfil, respuesta.cabeceraPersona.nombrePersona+' '+respuesta.cabeceraPersona.apellidoPersona);
+        this.guardarStorage(respuesta.usuario.usuario, respuesta.lsMenu, respuesta.perfil.nombrePerfil, respuesta.cabeceraPersona.nombrePersona+' '+respuesta.cabeceraPersona.apellidoPersona, respuesta.cabeceraPersona);
         return true;
       }
       })

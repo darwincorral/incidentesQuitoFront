@@ -7,6 +7,7 @@ import { LoginGuardGuard } from '../services/service.index';
 import { IncidentesComponent } from './incidentes/incidentes.component';
 import { CatalogoComponent } from './catalogo/catalogo.component';
 import { AdminGuard } from '../services/guards/admin.guard';
+import { ReportesComponent } from './reportes/reportes.component';
 
 const pagesRoutes: Routes = [
     {
@@ -15,8 +16,9 @@ const pagesRoutes: Routes = [
         canActivate:[LoginGuardGuard],
         children: [
             { path: 'dashboard', component: DashboardComponent,canActivate:[AdminGuard], data:{ titulo: 'Dashboard', descripcion:'Pagina de Inicio', icon:'ik ik-align-justify'} },
-            { path: 'incidentes', component: IncidentesComponent, data:{ titulo: 'Incidentes', descripcion:'Adminsitración de Incidentes', icon:'ik ik-align-justify'} },
-            { path: 'catalogos', component: CatalogoComponent, data:{ titulo: 'Catalogo', descripcion:'Administración de Catalogos', icon:'ik ik-align-justify'} },
+            { path: 'incidentes', component: IncidentesComponent, data:{ titulo: 'Incidentes', descripcion:'Adminsitración de Incidentes', icon:'fas fa-car-crash'} },
+            { path: 'reportes', component: ReportesComponent, data:{ titulo: 'Reportes', descripcion:'Reportes', icon:'ik ik-file-text '} },
+            { path: 'catalogos', component: CatalogoComponent, data:{ titulo: 'Catalogo', descripcion:'Administración de Catalogos', icon:'fas fa-project-diagram'} },
             { path: 'perfil', component: PerfilComponent, data:{ titulo: 'Mi Perfil', descripcion:'Personaliza tus datos', icon:'ik ik-user'}  },
             { path: '', redirectTo: '/dashboard', pathMatch: 'full' }
         ]

@@ -1,39 +1,48 @@
 <div class="row">
-    <div class="col-lg-6">
+    <div class="col-lg-5">
         <div class="card">
             <div class="card-header">
                 <h3>Incidentes Reportados</h3>
             </div>
             <div class="card-body">
-                <button type="button" class="btn btn-primary m-1" (click)="trabajarPoligono()">Trabajar Con el Poligono</button>
+                <div class="row">
+                    <div class="col-lg-7">
+                        <div class="alert alert-primary" *ngIf="zona !=null" role="alert">
+                            Su Zona Asignada es: <strong>{{zona}}</strong>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 text-right">
+                        <label style="font-size: 20px" class="col-form-label">Total de Incidentes: <strong>{{incidentes.length}}</strong></label>
+                    </div>
+                </div>
+                <div class="alert alert-warning" *ngIf="zona ==null" role="alert">
+                    <strong>No tiene ninguna zona asignada</strong>
+                </div>
                 <div class="map-box">
-                    <agm-map [fullscreenControl]='true' [mapTypeControl]='true' [zoom]="10.6" [latitude]="latitude" [longitude]="longitude" (mapReady)="onMapReady($event)">
+                    <agm-map [fullscreenControl]='true' [mapTypeControl]='true' [zoom]="10.6" [latitude]="latitude" [longitude]="longitude">
                         <agm-marker *ngFor="let incidenteItem of incidentes" [latitude]="incidenteItem.latitud" [longitude]="incidenteItem.longitud" [iconUrl]="incidenteItem.icono" (markerClick)="markerClicked($event,infoWindow,incidenteItem)">
                             <agm-info-window [disableAutoPan]="true" #infoWindow [isOpen]="false">
                                 <h6 class="text-secondary fw-700">{{incidenteItem.fechaCreacion | date:'mediumTime'}}</h6>
                                 <p class="text-center m-0">{{incidenteItem.persona.nombres}} {{incidenteItem.persona.apellidos}}</p>
                                 <p class="text-center text-primary m-0">{{incidenteItem.persona.telefono}}</p>
                                 <div class="text-center"> <button (click)="verIncidente(incidenteItem)" data-toggle="modal" data-target="#viewLayoutItemNotificacion" type="button" class="btn btn-outline-primary mb-1">Revisar</button></div>
-
                             </agm-info-window>
                         </agm-marker>
-                        <!-- <agm-polygon [paths]="paths" [clickable]="false">
-                        </agm-polygon>-->
-                        <!-- <agm-circle [latitude]="latitude" [longitude]="longitude" [radius]="5000" [fillColor]="'red'" [circleDraggable]="true" [editable]="true">
-                        </agm-circle>-->
+                        <agm-polygon *ngIf="estado=='GEN'" [paths]="poligono" [clickable]="false">
+                        </agm-polygon>
                     </agm-map>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-lg-6">
+    <div class="col-lg-7">
         <div class="card">
             <ul class="nav nav-pills custom-pills" id="pills-tab" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link" (click)="obtenerIncidentes('GEN')" id="pills-timeline-tab" data-toggle="pill" href="#current-month" role="tab" aria-selected="false">Nuevos</a>
+                    <a class="nav-link active" (click)="obtenerIncidentes('GEN')" id="pills-timeline-tab" data-toggle="pill" href="#current-month" role="tab" aria-selected="true">Nuevos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" (click)="obtenerIncidentes('CHG')" id="pills-timeline-tab" data-toggle="pill" href="#asignados" role="tab" aria-selected="true">Asignados</a>
+                    <a class="nav-link" (click)="obtenerIncidentes('CHG')" id="pills-timeline-tab" data-toggle="pill" href="#asignados" role="tab" aria-selected="false">Asignados</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" (click)="obtenerIncidentes('CAN')" id="pills-timeline-tab" data-toggle="pill" href="#falsos" role="tab" aria-selected="false">Falsos</a>
@@ -42,7 +51,34 @@
             <div class="tab-content" id="pills-tabContent">
                 <div class="tab-pane fade active show" id="current-month" role="tabpanel" aria-labelledby="pills-timeline-tab">
                     <div class="card-body">
-                        <div class="table-responsive">
+                        <div style="height: 525px; overflow-y: auto; overflow-x: hidden;" *ngIf="estado =='GEN'">
+                            <div class="profiletimeline mt-0">
+                                <div class="sl-item" *ngFor="let incidente of incidentes ; let i = index">
+                                    <div class="sl-left"> <img [src]="incidente.persona.fotoPerfil==null?'assets/img/user.png':incidente.persona.fotoPerfil" alt="user" class="rounded-circle"> </div>
+                                    <div class="sl-right">
+                                        <div>
+                                            <a href="javascript:void(0)" class="link">{{incidente.persona.identificacion}} - {{incidente.persona.nombres}} {{incidente.persona.apellidos}}</a>
+                                            <span class="sl-date ml-1">{{incidente.fechaCreacion | date:'shortDate'}}  {{incidente.fechaCreacion | date:'mediumTime'}}</span><br>
+                                            <div class="mt-20 row">
+                                                <div class="col-md-3 col-xs-12"><img [src]="incidente.fotoUno==null||''?'assets/img/notImage.png':incidente.fotoUno" alt="user" class="img-fluid rounded">
+                                                </div>
+                                                <div class="col-md-3 col-xs-12"><img [src]="incidente.fotoDos" alt="user" class="img-fluid rounded">
+                                                </div>
+                                                <div class="col-md-6 col-xs-12">
+                                                    <strong>Dirección</strong><br>
+                                                    <p class="text-muted"> {{incidente.direccion}}</p>
+                                                    <strong>Descripción</strong><br>
+                                                    <p class="text-muted"> {{incidente.descripcion}}</p>
+                                                    <a (click)="verIncidente(incidente)" href="#" class="btn btn-success" data-toggle="modal" data-target="#viewLayoutItemNotificacion"> Ver Detalle</a>
+                                                    <a href="#" (click)="cancelarIncidente(incidente)" class="btn btn-danger ml-1"> Incidente Falso</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive" *ngIf="estado !='GEN'">
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
@@ -113,7 +149,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="text-center">
-                                        <img [src]="'data:image/jpg;base64,'+incidente.persona.fotoCedula" width="150">
+                                        <img [src]="incidente.persona.fotoCedula" width="150">
                                         <h5 class="card-title mt-10">{{incidente.persona.nombres}} {{incidente.persona.apellidos}}</h5>
                                         <p class="card-title">{{incidente.persona.identificacion}}</p>
                                         <h6>{{incidente.persona.correo}}</h6>
@@ -134,7 +170,7 @@
                                         </div>
                                     </div>
                                     <div class="map-box">
-                                        <agm-map style="height: 225px" [zoom]="17" [latitude]="incidente.latitud" [longitude]="incidente.longitud" (mapClick)="location($event)">
+                                        <agm-map style="height: 225px" [zoom]="17" [latitude]="incidente.latitud" [longitude]="incidente.longitud">
                                             <agm-marker [latitude]="incidente.latitud" [longitude]="incidente.longitud">
                                             </agm-marker>
                                         </agm-map>
@@ -153,10 +189,10 @@
                                             <b> {{incidente.descripcion}}</b>
                                         </div>
                                         <div class="col-lg-6 text-center">
-                                            <img [src]="incidente.fotoUno==null|| ''? 'assets/img/notImage.png': 'data:image/jpg;base64,'+incidente.fotoUno " alt="foto1 " class="img-fluid rounded ">
+                                            <img [src]="incidente.fotoUno==null|| ''? 'assets/img/notImage.png': incidente.fotoUno " alt="foto1 " class="img-fluid rounded ">
                                         </div>
                                         <div class="col-lg-6 text-center">
-                                            <img [src]="incidente.fotoDos==null|| ''? 'assets/img/notImage.png': 'data:image/jpg;base64,'+incidente.fotoDos " alt="foto2 " class="img-fluid rounded ">
+                                            <img [src]="incidente.fotoDos==null|| ''? 'assets/img/notImage.png': incidente.fotoDos " alt="foto2 " class="img-fluid rounded ">
                                         </div>
 
                                     </div>
@@ -204,7 +240,7 @@
                     <div class="row ">
                         <div class="col-lg-12 ">
                             <button type="button " class="btn btn-secondary m-1 " data-dismiss="modal">Cerrar</button>
-                            <button data-dismiss="modal" *ngIf="estado =='GEN' || estado == 'CHG'" (click)="cancelarIncidente(incidente) " type="button " class="btn btn-danger list-delete m-1 ">Incidente Falso</button>
+                            <button data-dismiss="modal" *ngIf="estado =='GEN' || estado == 'CHG'" (click)="cancelarIncidente(incidente)" type="button " class="btn btn-danger list-delete m-1 ">Incidente Falso</button>
                         </div>
                     </div>
                 </div>
