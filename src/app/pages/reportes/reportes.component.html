@@ -1,98 +1,95 @@
 <div class="row">
-  <div class="col-lg-12">
-    <div class="card">
-      <div class="card-body">
-        <div class="row">
-          <div class="col-lg-6">
-            <div class="form-group">
-              <div class="m-1">
-                <input type="text" class="form-control" [(ngModel)]="filterTerm" name="search" placeholder="Filtros">
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-6 text-right">
-            <div class="m-1">
-              <button type="button" class="btn btn-success m-1" (click)="descargarInfo()">Descargar</button>
-            </div>
-          </div>
-        </div>
-        <div class="card table-card">
-          <div class="card-block">
-            <div class="table-responsive">
-              <table class="table table-hover mb-0 without-header">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th class="text-center">Estado</th>
-                    <th>Identificacion</th>
-                    <th>Datos Incidente</th>
-                    <th class="text-center">Agente Asignado</th>
-                    <th class="text-center">Operador</th>
-                    <th>Tipo de Incidente</th>
-
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngIf="isCargando">
-                    <td colspan="10">
-                      <div class="col-12 text-center">
-                        <img src="assets/img/loading/loader.gif" width="160px" height="120px">
-                        <br>
-                        <span>Espere por favor</span>
-                      </div>
-                      <hr>
-                    </td>
-                  </tr>
-                  <tr *ngIf="incidentes.length==0 && !isCargando">
-                    <td colspan="10" class="text-center">
-                      No existen registros
-                    </td>
-                  </tr>
-                  <tr *ngFor="let incidente of incidentes | filter:filterTerm;  let i = index ">
-                    <td>{{i+1}}</td>
-                    <td class="text-center" *ngIf="incidente.estado=='GEN'"><label
-                        class="badge badge-primary">GENERADO</label>
-                    </td>
-                    <td class="text-center" *ngIf="incidente.estado=='CAN'"><label
-                        class="badge badge-danger">CANCELADO</label>
-                    </td>
-                    <td class="text-center" *ngIf="incidente.estado=='CHG'"><label
-                        class="badge badge-warning">ASIGNADO</label>
-                    </td>
-                    <td>{{incidente.persona.identificacion}}</td>
-                    <td>
-                      <div class="d-inline-block align-middle">
-                        <img
-                          [src]="incidente.persona.fotoPerfil==null?'assets/img/user.png':incidente.persona.fotoPerfil"
-                          alt="user image" class="rounded-circle img-40 align-top mr-15">
-                        <div class="d-inline-block">
-                          <h6 class="mb-0">{{incidente.persona.nombres}} {{incidente.persona.apellidos}}</h6>
-                          <p class="text-muted mb-0">{{incidente.direccion | slice:0:60}}</p>
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <div class="m-1">
+                                <input type="text" class="form-control" [(ngModel)]="filterTerm" name="search" placeholder="Filtros">
+                            </div>
                         </div>
-                      </div>
-                    </td>
-                    <!-- <td><img [src]="incidente.persona.fotoPerfil==null?'assets/img/user.png':incidente.persona.fotoPerfil" class="table-user-thumb" alt=""> {{incidente.persona.nombres}} {{incidente.persona.apellidos}}</td>-->
-                    <td class="text-center" *ngIf="incidente.idAgente !=null && incidente.idAgente !=''">
-                      <h6 [class]="incidente.idAgente !=null && incidente.idAgente !=''?'fw-700':''">
-                        {{incidente.idAgente}}</h6>
-                    </td>
-                    <td class="text-center" *ngIf="incidente.idAgente ==null || incidente.idAgente ==''">
-                      <span class="badge badge-pill badge-warning mb-1">Sin asignar</span>
-                    </td>
-                    <td class="text-center" *ngIf="incidente.operador !='Sin Operador'">
-                      <h6 class="fw-700">{{incidente.operador}}</h6>
-                    </td>
-                    <td class="text-center" *ngIf="incidente.operador =='Sin Operador'">
-                      <span class="badge badge-pill badge-warning mb-1">Sin Operador</span>
-                    </td>
-                    <td>{{incidente.tipoIncidente.nombre}}</td>
-                  </tr>
-                </tbody>
-              </table>
+                    </div>
+                    <div class="col-lg-6 text-right">
+                        <div class="m-1">
+                            <button type="button" class="btn btn-success m-1" (click)="descargarInfo()">Descargar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card table-card">
+                    <div class="card-block">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0 without-header">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th class="text-center">Estado</th>
+                                        <th>Identificacion</th>
+                                        <th>Datos Incidente</th>
+                                        <th class="text-center">Agente Asignado</th>
+                                        <th class="text-center">Operador</th>
+                                        <th>Tipo de Incidente</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="isCargando">
+                                        <td colspan="10">
+                                            <div class="col-12 text-center">
+                                                <img src="assets/img/loading/loader.gif" width="160px" height="120px">
+                                                <br>
+                                                <span>Espere por favor</span>
+                                            </div>
+                                            <hr>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="incidentes.length==0 && !isCargando">
+                                        <td colspan="10" class="text-center">
+                                            No existen registros
+                                        </td>
+                                    </tr>
+                                    <tr *ngFor="let incidente of incidentes | filter:filterTerm;  let i = index ">
+                                        <td>{{i+1}}</td>
+                                        <td class="text-center" *ngIf="incidente.estado=='GEN'"><label class="badge badge-primary">GENERADO</label>
+                                        </td>
+                                        <td class="text-center" *ngIf="incidente.estado=='CAN'"><label class="badge badge-danger">CANCELADO</label>
+                                        </td>
+                                        <td class="text-center" *ngIf="incidente.estado=='CHG'"><label class="badge badge-warning">ASIGNADO</label>
+                                        </td>
+                                        <td class="text-center" *ngIf="incidente.estado=='AFE'"><label class="badge badge-success">ATENDIDO</label>
+                                        </td>
+                                        <td>{{incidente.persona.identificacion}}</td>
+                                        <td>
+                                            <div class="d-inline-block align-middle">
+                                                <img [src]="incidente.persona.fotoPerfil==null?'assets/img/user.png':incidente.persona.fotoPerfil" alt="user image" class="rounded-circle img-40 align-top mr-15">
+                                                <div class="d-inline-block">
+                                                    <h6 class="mb-0">{{incidente.persona.nombres}} {{incidente.persona.apellidos}}</h6>
+                                                    <p class="text-muted mb-0">{{incidente.direccion | slice:0:60}}</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <!-- <td><img [src]="incidente.persona.fotoPerfil==null?'assets/img/user.png':incidente.persona.fotoPerfil" class="table-user-thumb" alt=""> {{incidente.persona.nombres}} {{incidente.persona.apellidos}}</td>-->
+                                        <td class="text-center" *ngIf="incidente.idAgente !=null && incidente.idAgente !=''">
+                                            <h6 [class]="incidente.idAgente !=null && incidente.idAgente !=''?'fw-700':''">
+                                                {{incidente.idAgente}}</h6>
+                                        </td>
+                                        <td class="text-center" *ngIf="incidente.idAgente ==null || incidente.idAgente ==''">
+                                            <span class="badge badge-pill badge-warning mb-1">Sin asignar</span>
+                                        </td>
+                                        <td class="text-center" *ngIf="incidente.operador !='Sin Operador'">
+                                            <h6 class="fw-700">{{incidente.operador}}</h6>
+                                        </td>
+                                        <td class="text-center" *ngIf="incidente.operador =='Sin Operador'">
+                                            <span class="badge badge-pill badge-warning mb-1">Sin Operador</span>
+                                        </td>
+                                        <td>{{incidente.tipoIncidente.nombre}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>

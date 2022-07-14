@@ -18,7 +18,7 @@
                         <label style="font-size: 20px" class="col-form-label">Total de Incidentes: <strong>{{incidentes.length}}</strong></label>
                     </div>
                 </div>
-            
+
                 <div class="map-box">
                     <agm-map [fullscreenControl]='true' [mapTypeControl]='true' [zoom]="10.6" [latitude]="latitude" [longitude]="longitude">
                         <agm-marker *ngFor="let incidenteItem of incidentes" [latitude]="incidenteItem.latitud" [longitude]="incidenteItem.longitud" [iconUrl]="incidenteItem.icono" (markerClick)="markerClicked($event,infoWindow,incidenteItem)">
@@ -48,6 +48,9 @@
                 <li class="nav-item">
                     <a class="nav-link" (click)="obtenerIncidentes('CAN')" id="pills-timeline-tab" data-toggle="pill" href="#falsos" role="tab" aria-selected="false">Cancelados</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" (click)="obtenerIncidentes('AFE')" id="pills-timeline-tab" data-toggle="pill" href="#resueltos" role="tab" aria-selected="false">Resueltos</a>
+                </li>
             </ul>
             <div class="tab-content" id="pills-tabContent">
                 <div class="tab-pane fade active show" id="current-month" role="tabpanel" aria-labelledby="pills-timeline-tab">
@@ -60,12 +63,12 @@
                                 <img src="assets/img/loading/loader.gif" width="160px" height="120px">
                                 <br>
                                 <span>Espere por favor</span>
-                              </div>
-    
-                              <div style="height: 525px; overflow-y: auto; overflow-x: hidden;" class="col-12 text-center" *ngIf="incidentes.length==0 && !isCargando">
+                            </div>
+
+                            <div style="height: 525px; overflow-y: auto; overflow-x: hidden;" class="col-12 text-center" *ngIf="incidentes.length==0 && !isCargando">
                                 <h1 style="margin-top: 150px;" class="text-danger fw-700">No existen registros</h1>
                                 <img src="assets/img/carpeta.png" width="120px" height="120px">
-                              </div>
+                            </div>
                             <div class="profiletimeline mt-0">
                                 <div class="sl-item" *ngFor="let incidente of incidentes  | filter:filterIncidentes;  let i = index">
                                     <div class="sl-left"> <img [src]="incidente.persona.fotoPerfil==null?'assets/img/user.png':incidente.persona.fotoPerfil" alt="user" class="rounded-circle"> </div>
@@ -100,7 +103,7 @@
                                         <th>Identificacion</th>
                                         <th>Nombres</th>
                                         <th>Direccion</th>
-                                        <th *ngIf="estado =='CHG'">Agente Asignado</th>
+                                        <th *ngIf="estado =='CHG' || estado == 'AFE'">Agente Asignado</th>
                                         <th>Tipo de Incidente</th>
                                         <th>Acciones</th>
                                     </tr>
@@ -126,7 +129,7 @@
                                         <td>{{incidente.persona.identificacion}}</td>
                                         <td>{{incidente.persona.nombres}} {{incidente.persona.apellidos}}</td>
                                         <td>{{incidente.direccion}}</td>
-                                        <td *ngIf="estado =='CHG'"><span class="badge badge-pill badge-success mb-1">{{incidente.idAgente}}</span></td>
+                                        <td *ngIf="estado =='CHG' || estado == 'AFE'"><span class="badge badge-pill badge-success mb-1">{{incidente.idAgente}}</span></td>
                                         <td>{{incidente.tipoIncidente.nombre}}</td>
                                         <td>
                                             <div class="table-actions text-left">
@@ -235,7 +238,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6 mt-10 " *ngIf="estado =='CHG'">
+                        <div class="col-lg-6 mt-10 " *ngIf="estado =='CHG' || estado =='AFE'">
                             <div class="card">
                                 <div class="card-header">
                                     <h3>Agente de Tránsito Asignado</h3>

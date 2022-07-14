@@ -224,7 +224,7 @@ export class IncidentesComponent implements OnInit {
     }).then((result) => {
       if (result.value) {
         this.incidentesService
-          .asignarIncidenteAgente(this.incidente._id, agente.cpNomb +' '+agente.cpApel,this.operador.numeroIdentificacion)
+          .asignarIncidenteAgente(this.incidente._id, agente.nombrePersona +' '+agente.apellidoPersona,this.operador.numeroIdentificacion)
           .subscribe(
             (incidente: any) => {
               this.obtenerIncidentes(this.estado);

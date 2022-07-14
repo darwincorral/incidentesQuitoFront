@@ -15,7 +15,14 @@ export class DashboardComponent implements OnInit {
   zonas = [];
   poligono = [];
   tipoIncidentes= [];
-  incidentes = [];
+  tipoIncidente="*";
+
+  total=0;
+
+   nuevosMes =[0,0,0,0,0,0,0,0,0,0,0,0];
+   asignadosMes =[0,0,0,0,0,0,0,0,0,0,0,0];
+   canceladosMes =[0,0,0,0,0,0,0,0,0,0,0,0];
+   resueltosMes =[0,0,0,0,0,0,0,0,0,0,0,0];
 
   data: any;
   dataBarra: any;
@@ -72,7 +79,7 @@ export class DashboardComponent implements OnInit {
               this.atendidos = total.listAtendidos;
 
               this.data = {
-                labels: ["Nuevos","En Revisión" , "Falsos", "Atendidos"],
+                labels: ["Nuevos","En Proceso" , "Falsos", "Atendidos"],
                 datasets: [
                   {
                     data: [
@@ -82,15 +89,15 @@ export class DashboardComponent implements OnInit {
                       this.atendidos,
                     ],
                     backgroundColor: [
-                      "#f5365c",
-                      "#36A2EB",
                       "#FFCE56",
+                      "#36A2EB",
+                      "#f5365c",
                       "#2dce89",
                     ],
                     hoverBackgroundColor: [
-                      "#f5365c",
-                      "#36A2EB",
                       "#FFCE56",
+                      "#36A2EB",
+                      "#f5365c",
                       "#2dce89",
                     ],
                   },
@@ -145,7 +152,11 @@ export class DashboardComponent implements OnInit {
             let meses= ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
   	        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
-
+            let i =[0,0,0,0,0,0,0,0,0,0,0,0];
+            this.nuevosMes =[0,0,0,0,0,0,0,0,0,0,0,0];
+            this.asignadosMes =[0,0,0,0,0,0,0,0,0,0,0,0];
+            this.canceladosMes =[0,0,0,0,0,0,0,0,0,0,0,0];
+            this.resueltosMes =[0,0,0,0,0,0,0,0,0,0,0,0];
 
             for (var incidente of incidentes) {
 
@@ -158,41 +169,96 @@ export class DashboardComponent implements OnInit {
                 )
               ) {
                 const d = new Date(incidente.fechaCreacion);
-                console.log("The current month is " + meses[d.getMonth()]);
-
-                this.dataBarra = {
-                  labels: meses,
-                  datasets: [
-                    {
-                      label: "Nuevos",
-                      backgroundColor: "#f5365c",
-                      borderColor: "#f5365c",
-                      data: [4,2],
-                    },
-                    {
-                      label: "En Revisión",
-                      backgroundColor: "#36A2EB",
-                      borderColor: "#36A2EB",
-                      data: [0],
-                    },
-                    {
-                      label: "Falsos o Cancelados",
-                      backgroundColor: "#FFCE56",
-                      borderColor: "#FFCE56",
-                      data: [0],
-                    },
-                    {
-                      label: "Atendidos",
-                      backgroundColor: "#2dce89",
-                      borderColor: "#2dce89",
-                      data: [0],
-                    },
-                  ],
-                };
-
-                this.incidentes.push(incidente);
+                if(meses[0]== meses[d.getMonth()] && (incidente.tipoIncidente.nombre ==this.tipoIncidente|| this.tipoIncidente =='*')){
+                  i[0]= i[0]+1;
+                  this.sumaIncidentes(incidente,0 );
+                }
+                if(meses[1]== meses[d.getMonth()] && (incidente.tipoIncidente.nombre ==this.tipoIncidente|| this.tipoIncidente =='*')){
+                  i[1]= i[1]+1;
+                  this.sumaIncidentes(incidente,1);
+                }
+                if(meses[2]== meses[d.getMonth()] && (incidente.tipoIncidente.nombre ==this.tipoIncidente|| this.tipoIncidente =='*')){
+                  i[2]= i[2]+1;
+                  this.sumaIncidentes(incidente,2);
+                }
+                if(meses[3]== meses[d.getMonth()] && (incidente.tipoIncidente.nombre ==this.tipoIncidente|| this.tipoIncidente =='*')){
+                  i[3]= i[3]+1;
+                  this.sumaIncidentes(incidente,3);
+                }
+                if(meses[4]== meses[d.getMonth()] && (incidente.tipoIncidente.nombre ==this.tipoIncidente|| this.tipoIncidente =='*')){
+                  i[4]= i[4]+1;
+                  this.sumaIncidentes(incidente,4);
+                }
+                if(meses[5]== meses[d.getMonth()] && (incidente.tipoIncidente.nombre ==this.tipoIncidente|| this.tipoIncidente =='*')){
+                  i[5]= i[5]+1;
+                  this.sumaIncidentes(incidente,5);
+                }
+                if(meses[6]== meses[d.getMonth()] && (incidente.tipoIncidente.nombre ==this.tipoIncidente|| this.tipoIncidente =='*')){
+                  i[6]= i[6]+1;
+                  this.sumaIncidentes(incidente,6);
+                }
+                if(meses[7]== meses[d.getMonth()] && (incidente.tipoIncidente.nombre ==this.tipoIncidente|| this.tipoIncidente =='*')){
+                  i[7]= i[7]+1;
+                  this.sumaIncidentes(incidente,7);
+                }
+                if(meses[8]== meses[d.getMonth()] && (incidente.tipoIncidente.nombre ==this.tipoIncidente|| this.tipoIncidente =='*')){
+                  i[8]= i[8]+1;
+                  this.sumaIncidentes(incidente,8);
+                }
+                if(meses[9]== meses[d.getMonth()] && (incidente.tipoIncidente.nombre ==this.tipoIncidente|| this.tipoIncidente =='*')){
+                  i[9]= i[9]+1;
+                  this.sumaIncidentes(incidente,9);
+                }
+                if(meses[10]== meses[d.getMonth()] && (incidente.tipoIncidente.nombre ==this.tipoIncidente|| this.tipoIncidente =='*')){
+                  i[10]= i[10]+1;
+                  this.sumaIncidentes(incidente,10);
+                }
+                if(meses[11]== meses[d.getMonth()] && (incidente.tipoIncidente.nombre ==this.tipoIncidente|| this.tipoIncidente =='*')){
+                  i[11]= i[11]+1;
+                  this.sumaIncidentes(incidente,11);
+                }
+   
               }
             }
+            const reducer = (accumulator, curr) => accumulator + curr;
+            this.total =i.reduce(reducer);
+
+            this.dataBarra = {
+              labels: meses,
+              datasets: [
+                {
+                  label: "Total",
+                  backgroundColor: "#404e67",
+                  borderColor: "#404e67",
+                  data: i,
+                },
+                {
+                  label: "Nuevos",
+                  backgroundColor: "#FFCE56",
+                  borderColor: "#FFCE56",
+                  data: this.nuevosMes,
+                },
+                {
+                  label: "En Proceso",
+                  backgroundColor: "#36A2EB",
+                  borderColor: "#36A2EB",
+                  data: this.asignadosMes,
+                },
+                {
+                  label: "Cancelados",
+                  backgroundColor: "#f5365c",
+                  borderColor: "#f5365c",
+                  data: this.canceladosMes,
+                },
+                {
+                  label: "Atendidos",
+                  backgroundColor: "#2dce89",
+                  borderColor: "#2dce89",
+                  data: this.resueltosMes,
+                },
+              ],
+            };
+          
           },
           (error) => {
             Swal.close();
@@ -201,6 +267,21 @@ export class DashboardComponent implements OnInit {
       },
       allowOutsideClick: () => !Swal.isLoading(),
     });
+  }
+
+  sumaIncidentes(incidente,i){
+    if(incidente.estado == 'GEN'){
+      return this.nuevosMes[i]= this.nuevosMes[i]+1;
+    }
+    if(incidente.estado == 'CHG'){
+      return this.asignadosMes[i]= this.asignadosMes[i]+1;
+    }
+    if(incidente.estado == 'CAN'){
+      return this.canceladosMes[i]= this.canceladosMes[i]+1;
+    }
+    if(incidente.estado == 'AFE'){
+      return this.resueltosMes[i]= this.resueltosMes[i]+1;
+    }
   }
 
   onlyUnique(value, index, self) {
@@ -243,7 +324,11 @@ export class DashboardComponent implements OnInit {
 
   seleccionarZona(event) {
     this.poligono = JSON.parse(event);
-    this.incidentes = [];
+    this.obtenerIncidentes();
+  }
+
+  seleccionarTipoIncidente(event) {
+    this.tipoIncidente = event;
     this.obtenerIncidentes();
   }
 }

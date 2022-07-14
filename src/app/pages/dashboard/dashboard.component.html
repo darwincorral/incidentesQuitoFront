@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="progress progress-sm">
-                <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                <div class="progress-bar" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100" style="width: 100%; background-color: #ffce56;"></div>
             </div>
         </div>
     </div>
@@ -24,7 +24,7 @@
             <div class="widget-body">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="state">
-                        <h6>Incidentes En Revisión</h6>
+                        <h6>Incidentes En Proceso</h6>
                         <h2>{{asignados}}</h2>
                     </div>
                     <div class="icon">
@@ -52,7 +52,7 @@
                 </div>
             </div>
             <div class="progress progress-sm">
-                <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
             </div>
         </div>
     </div>
@@ -76,48 +76,48 @@
         </div>
     </div>
 
-    <div class="col-lg-3">
+    <div class="col-lg-4">
         <div class="card">
-          <div class="card-header">
-           <h3> Totalizado de Incidentes</h3>
-          </div>
-          <div class="card-body">
-            <p-chart type="pie" [data]="data" height="39vh"></p-chart>
-          </div>
+            <div class="card-header">
+                <h3> Totalizado de Incidentes</h3>
+            </div>
+            <div class="card-body">
+                <p-chart type="pie" [data]="data" height="39vh"></p-chart>
+            </div>
         </div>
-      </div>
-      <div class="col-lg-7">
+    </div>
+    <div class="col-lg-8">
         <div class="card">
-          <div class="card-header">
-            <h3>Incidentes por Zona</h3>
-           </div>
-          <div class="card-body">
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="form-group">
-                        <label for="exampleSelectGender">Zonas</label>
-                      <select class="form-control" id="exampleSelectGender" (change)="seleccionarZona($event.target.value)">
+            <div class="card-header">
+                <h3>Incidentes por Zona</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label for="exampleSelectGender">Zonas</label>
+                            <select class="form-control" id="exampleSelectGender" (change)="seleccionarZona($event.target.value)">
                             <option *ngFor="let zona of zonas" [value]="zona.valor">{{zona.nombre}}
                             </option>
                         </select>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="form-group">
-                        <label for="exampleSelectGender">Tipo</label>
-                      <select class="form-control" id="exampleSelectGender" >
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label for="exampleSelectGender">Tipo</label>
+                            <select class="form-control" id="exampleSelectGender" (change)="seleccionarTipoIncidente($event.target.value)">
                         <option  value="*">Todos</option>
-                            <option *ngFor="let tipo of tipoIncidentes" [value]="tipo.valor">{{tipo.nombre}}
+                            <option *ngFor="let tipo of tipoIncidentes" [value]="tipo.nombre">{{tipo.nombre}}
                             </option>
                         </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 text-right">
+                        <br> <label style="font-size: 20px" class="col-form-label">Total de Incidentes: <strong>{{total}}</strong></label>
                     </div>
                 </div>
-                <div class="col-lg-4 text-right">
-                    <br> <label style="font-size: 20px" class="col-form-label">Total de Incidentes: <strong>{{incidentes.length}}</strong></label>
-                </div>
+                <p-chart type="bar" [data]="dataBarra" height="31vh"></p-chart>
             </div>
-            <p-chart type="bar" [data]="dataBarra"></p-chart>
-          </div>
         </div>
-      </div>
+    </div>
 </div>
