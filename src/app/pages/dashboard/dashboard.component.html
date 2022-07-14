@@ -24,7 +24,7 @@
             <div class="widget-body">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="state">
-                        <h6>Incidentes Asignados</h6>
+                        <h6>Incidentes En Revisión</h6>
                         <h2>{{asignados}}</h2>
                     </div>
                     <div class="icon">
@@ -52,7 +52,7 @@
                 </div>
             </div>
             <div class="progress progress-sm">
-                <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
             </div>
         </div>
     </div>
@@ -75,86 +75,49 @@
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-lg-6">
-        <div class="card">
-            <div class="card-header">
-                <h3>Asignar Zonas a Operadores</h3>
-            </div>
-            <div class="card-body">
-                <div class="form-group col-lg-6">
-                    <input type="text" class="form-control" id="exampleInputUsername1" [(ngModel)]="filterTerm" placeholder="Buscar Operador">
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Operador</th>
-                                <th>Identificación</th>
-                                <th class="text-center">Zona</th>
-                            </tr>
-                        </thead>
-                        <tbody>
 
-                            <tr *ngIf="operadores.length==0">
-                                <td colspan="10" class="text-center">
-                                    No existen registros
-                                </td>
-                            </tr>
-                            <tr *ngFor="let operador of operadores | filter:filterTerm; let i = index">
-                                <td>{{i+1}}</td>
-                                <td>{{operador.nombres}}</td>
-                                <td>{{operador.numeroIdentificacion}}</td>
-                                <td class="text-center">
-                                    <select class="form-control" id="exampleSelectGender" (change)="seleccionarZonaOperador($event.target.value, operador)">
-                                        <option  disabled >Sin Asignacion</option>
-                                        <option *ngFor="let zona of zonas" [value]="zona._id" [selected]="operador.zona == zona.nombre">{{zona.nombre}}
-                                        </option>
-                                    </select>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-6">
+    <div class="col-lg-3">
         <div class="card">
-            <div class="card-header">
-                <h3>Control de Incidentes Reportados</h3>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-5">
-                        <div class="form-group">
-                            <label for="exampleSelectGender">Zonas</label>
-                            <select class="form-control" id="exampleSelectGender" (change)="seleccionarZona($event.target.value)">
-                                <option *ngFor="let zona of zonas" [value]="zona.valor">{{zona.nombre}}
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-lg-7 text-right">
-                        <br> <label style="font-size: 20px" class="col-form-label">Total de Incidentes: <strong>{{incidentesFilter.length}}</strong></label>
-                    </div>
-                </div>
-                <div class="map-box">
-                    <agm-map [fullscreenControl]='true' [mapTypeControl]='true' [zoom]="10.6" [latitude]="latitude" [longitude]="longitude">
-                        <agm-marker *ngFor="let incidenteItem of incidentesFilter" [latitude]="incidenteItem.latitud" [longitude]="incidenteItem.longitud" [iconUrl]="incidenteItem.icono" (markerClick)="markerClicked(infoWindow)">
-                            <agm-info-window [disableAutoPan]="true" #infoWindow [isOpen]="false">
-                                <h6 class="text-secondary fw-700">{{incidenteItem.fechaCreacion | date:'mediumTime'}}</h6>
-                                <p class="text-center m-0">{{incidenteItem.persona.nombres}} {{incidenteItem.persona.apellidos}}</p>
-                                <p class="text-center text-primary m-0">{{incidenteItem.persona.telefono}}</p>
-                            </agm-info-window>
-                        </agm-marker>
-                        <agm-polygon [paths]="poligono" [clickable]="false">
-                        </agm-polygon>
-                    </agm-map>
-                </div>
-            </div>
+          <div class="card-header">
+           <h3> Totalizado de Incidentes</h3>
+          </div>
+          <div class="card-body">
+            <p-chart type="pie" [data]="data" height="39vh"></p-chart>
+          </div>
         </div>
-    </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="card">
+          <div class="card-header">
+            <h3>Incidentes por Zona</h3>
+           </div>
+          <div class="card-body">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="exampleSelectGender">Zonas</label>
+                      <select class="form-control" id="exampleSelectGender" (change)="seleccionarZona($event.target.value)">
+                            <option *ngFor="let zona of zonas" [value]="zona.valor">{{zona.nombre}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="exampleSelectGender">Tipo</label>
+                      <select class="form-control" id="exampleSelectGender" >
+                        <option  value="*">Todos</option>
+                            <option *ngFor="let tipo of tipoIncidentes" [value]="tipo.valor">{{tipo.nombre}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-right">
+                    <br> <label style="font-size: 20px" class="col-form-label">Total de Incidentes: <strong>{{incidentes.length}}</strong></label>
+                </div>
+            </div>
+            <p-chart type="bar" [data]="dataBarra"></p-chart>
+          </div>
+        </div>
+      </div>
 </div>

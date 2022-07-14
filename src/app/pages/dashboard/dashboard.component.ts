@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import Swal from "sweetalert2";
-import { CatalogosService, IncidentesService } from "src/app/services/service.index";
-import { UiServicesService } from "../../services/servicios/ui-services.service";
+import { IncidentesService } from "src/app/services/service.index";
+
 @Component({
   selector: "app-dashboard",
   templateUrl: "./dashboard.component.html",
@@ -12,142 +12,20 @@ export class DashboardComponent implements OnInit {
   asignados = 0;
   falsos = 0;
   atendidos = 0;
-  tipoIncidente = "*";
-
-  incidentes = [];
-  incidentesFilter = [];
-
-  latitude = -0.15985;
-  longitude = -78.42495;
-  previous;
   zonas = [];
   poligono = [];
-  operadores = [];
-  filterTerm: string;
+  tipoIncidentes= [];
+  incidentes = [];
+
+  data: any;
+  dataBarra: any;
   constructor(
     private incidentesService: IncidentesService,
-    private uiService: UiServicesService,
-    private catalogosService: CatalogosService
   ) {}
 
   ngOnInit() {
     this.obtenerTotalesIncidentes();
-    this.obtenerOperadores();
     this.obtenerZonas();
-    this.obtenerIncidentes();
-  }
-
-  obtenerTotalesIncidentes() {
-    Swal.fire({
-      title: "Cargando Datos",
-      text: "Por Favor espere...",
-      type: "info",
-      //showCloseButton: true,
-      onBeforeOpen: () => {
-        Swal.showLoading();
-        this.incidentesService
-          .obtenerTotalIncidentes(this.tipoIncidente)
-          .subscribe(
-            (total: any) => {
-              Swal.close();
-              this.asignados = total.listAsignados;
-              this.nuevos = total.listNuevos;
-              this.falsos = total.listFalsos;
-              this.atendidos = total.listAtendidos;
-            },
-            (error) => {
-              Swal.close();
-            }
-          );
-      },
-      allowOutsideClick: () => !Swal.isLoading(),
-    });
-  }
-
-  obtenerIncidentes() {
-    Swal.fire({
-      title: "Cargando Datos",
-      text: "Por Favor espere...",
-      type: "info",
-      //showCloseButton: true,
-      onBeforeOpen: () => {
-        Swal.showLoading();
-        this.incidentesService.obtenerIncidentes("GEN").subscribe(
-          (incidentes: any) => {
-            Swal.close();
-            this.incidentes = incidentes;
-            for (var incidente of this.incidentes) {
-              //Verificar si el incidente dentro de la zona
-              if (
-                this.isLatLngInZone(
-                  this.poligono,
-                  incidente.latitud,
-                  incidente.longitud
-                )
-              ) {
-                //Cargar Iconos
-                incidente.icono = {
-                  url: incidente.tipoIncidente.valor,
-                  scaledSize: {
-                    width: 40,
-                    height: 40,
-                  },
-                };
-                this.incidentesFilter.push(incidente);
-              }
-            }
-          },
-          (error) => {
-            Swal.close();
-          }
-        );
-      },
-      allowOutsideClick: () => !Swal.isLoading(),
-    });
-  }
-
-  obtenerOperadores() {
-    Swal.fire({
-      title: "Cargando Datos",
-      text: "Por Favor espere...",
-      type: "info",
-      //showCloseButton: true,
-      onBeforeOpen: () => {
-        Swal.showLoading();
-        this.uiService.obtenerOperadores().subscribe(
-          (operadores: any) => {
-            Swal.close();
-            let operadoresAMT = operadores.retorno[1].listPerfilListUsuarioDTO;
-            this.incidentesService.obtenerZonasOperadores().subscribe(
-              (operadoresZonasCatalogo: any) => {
-                for (let operadorAMT of operadoresAMT) {
-                  const result = operadoresZonasCatalogo.filter(operadorZonaCatalogo => operadorZonaCatalogo.nombre == operadorAMT.numeroIdentificacion);
-                      if(result.length==0){
-                        this.operadores.push({
-                        nombres: operadorAMT.nombrePersona + " "+ operadorAMT.apellidoPersona,
-                        numeroIdentificacion:operadorAMT.numeroIdentificacion,
-                        zona: 'Sin Asignacion',
-                        idCatalogo: null
-                      });
-                      }else{
-                        this.operadores.push({
-                          nombres: operadorAMT.nombrePersona + " "+ operadorAMT.apellidoPersona,
-                          numeroIdentificacion:operadorAMT.numeroIdentificacion,
-                          zona: result[0].valor,
-                          idCatalogo: result[0]._id
-                        });
-                      }
-                }
-              }
-            );
-          },
-          (error) => {
-            Swal.close();
-          }
-        );
-      },
-      allowOutsideClick: () => !Swal.isLoading(),
-    });
   }
 
   obtenerZonas() {
@@ -163,6 +41,7 @@ export class DashboardComponent implements OnInit {
             Swal.close();
             this.zonas = zonas;
             this.poligono = JSON.parse(zonas[0].valor);
+            this.obtenerTiposIncidentes();
           },
           (error) => {
             Swal.close();
@@ -173,17 +52,159 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  seleccionarZona(event) {
-    this.poligono = JSON.parse(event);
-    this.incidentesFilter = [];
-    this.obtenerIncidentes();
+
+  obtenerTotalesIncidentes() {
+    Swal.fire({
+      title: "Cargando Datos",
+      text: "Por Favor espere...",
+      type: "info",
+      //showCloseButton: true,
+      onBeforeOpen: () => {
+        Swal.showLoading();
+        this.incidentesService
+          .obtenerTotalIncidentes('*')
+          .subscribe(
+            (total: any) => {
+              Swal.close();
+              this.asignados = total.listAsignados;
+              this.nuevos = total.listNuevos;
+              this.falsos = total.listFalsos;
+              this.atendidos = total.listAtendidos;
+
+              this.data = {
+                labels: ["Nuevos","En Revisión" , "Falsos", "Atendidos"],
+                datasets: [
+                  {
+                    data: [
+                      this.nuevos,
+                      this.asignados,
+                      this.falsos,
+                      this.atendidos,
+                    ],
+                    backgroundColor: [
+                      "#f5365c",
+                      "#36A2EB",
+                      "#FFCE56",
+                      "#2dce89",
+                    ],
+                    hoverBackgroundColor: [
+                      "#f5365c",
+                      "#36A2EB",
+                      "#FFCE56",
+                      "#2dce89",
+                    ],
+                  },
+                ],
+              };
+            },
+            (error) => {
+              Swal.close();
+            }
+          );
+      },
+      allowOutsideClick: () => !Swal.isLoading(),
+    });
   }
 
-  markerClicked(infoWindow) {
-    if (this.previous) {
-      this.previous.close();
-    }
-    this.previous = infoWindow;
+  obtenerTiposIncidentes(){
+    Swal.fire({
+      title: "Cargando Datos",
+      text: "Por Favor espere...",
+      type: "info",
+      //showCloseButton: true,
+      onBeforeOpen: () => {
+        Swal.showLoading();
+        this.incidentesService.obtenerTipoIncidentes().subscribe(
+          (tipoIncidentes: any) => {
+            Swal.close();
+            this.tipoIncidentes = tipoIncidentes;
+            this.obtenerIncidentes();
+          },
+          (error) => {
+            Swal.close();
+          }
+        );
+      },
+      allowOutsideClick: () => !Swal.isLoading(),
+    });
+  }
+  
+
+  
+  obtenerIncidentes() {
+    Swal.fire({
+      title: "Cargando Datos",
+      text: "Por Favor espere...",
+      type: "info",
+      //showCloseButton: true,
+      onBeforeOpen: () => {
+        Swal.showLoading();
+        this.incidentesService.obtenerAllIncidentes().subscribe(
+          (incidentes: any) => {
+            Swal.close();
+            let meses= ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+  	        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+
+
+            for (var incidente of incidentes) {
+
+              //Verificar si el incidente dentro de la zona
+              if (
+                this.isLatLngInZone(
+                  this.poligono,
+                  incidente.latitud,
+                  incidente.longitud
+                )
+              ) {
+                const d = new Date(incidente.fechaCreacion);
+                console.log("The current month is " + meses[d.getMonth()]);
+
+                this.dataBarra = {
+                  labels: meses,
+                  datasets: [
+                    {
+                      label: "Nuevos",
+                      backgroundColor: "#f5365c",
+                      borderColor: "#f5365c",
+                      data: [4,2],
+                    },
+                    {
+                      label: "En Revisión",
+                      backgroundColor: "#36A2EB",
+                      borderColor: "#36A2EB",
+                      data: [0],
+                    },
+                    {
+                      label: "Falsos o Cancelados",
+                      backgroundColor: "#FFCE56",
+                      borderColor: "#FFCE56",
+                      data: [0],
+                    },
+                    {
+                      label: "Atendidos",
+                      backgroundColor: "#2dce89",
+                      borderColor: "#2dce89",
+                      data: [0],
+                    },
+                  ],
+                };
+
+                this.incidentes.push(incidente);
+              }
+            }
+          },
+          (error) => {
+            Swal.close();
+          }
+        );
+      },
+      allowOutsideClick: () => !Swal.isLoading(),
+    });
+  }
+
+  onlyUnique(value, index, self) {
+    return self.indexOf(value) === index;
   }
 
   isLatLngInZone(latLngs, lat, lng) {
@@ -220,32 +241,9 @@ export class DashboardComponent implements OnInit {
     return c;
   }
 
-  seleccionarZonaOperador(idZona, operador) {
-    let zonaOperador = this.zonas.filter((value) => value._id === idZona);
-    let formData = {
-      "idPadre":"62ca2b719df419b66a5c47ef",
-      "nombre":operador.numeroIdentificacion,
-      "valor": zonaOperador[0]['nombre'],
-      "tipo":"Texto"
-    };
-    if(operador.idCatalogo ==null){
-      this.incidentesService.asignarZona(formData).subscribe(
-      (resultado: any) => {
-        Swal.fire("Zona Asignada Correctamente", "", "success");
-      },
-      (error) => {
-        Swal.fire("Ocurrio un error al ingresar los datos", "", "error");
-      }
-    );
-    }else{
-      this.incidentesService.actualizarZona(formData,operador.idCatalogo).subscribe(
-        (resultado: any) => {
-          Swal.fire("Zona Actualizada Correctamente", "", "success");
-        },
-        (error) => {
-          Swal.fire("Ocurrio un error al ingresar los datos", "", "error");
-        });
-    }
+  seleccionarZona(event) {
+    this.poligono = JSON.parse(event);
+    this.incidentes = [];
+    this.obtenerIncidentes();
   }
-
 }

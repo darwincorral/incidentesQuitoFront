@@ -25,6 +25,9 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { IncidentesComponent } from './incidentes/incidentes.component';
 import { CatalogoComponent } from './catalogo/catalogo.component';
 import { AgmCoreModule } from '@agm/core';
+import { ReportesComponent } from './reportes/reportes.component';
+import {ChartModule} from 'primeng/chart';
+import { AsignacionesComponent } from './asignaciones/asignaciones.component';
 
 @NgModule({
 declarations:[
@@ -34,6 +37,8 @@ declarations:[
     PerfilComponent,
     IncidentesComponent,
     CatalogoComponent,
+    ReportesComponent,
+    AsignacionesComponent
 ],
 exports:[
     DashboardComponent,
@@ -53,6 +58,7 @@ imports:[
     MatMenuModule,
     MatProgressSpinnerModule,
     Ng2SearchPipeModule,
+    ChartModule,
     AgmCoreModule.forRoot({
         apiKey: '',
         libraries: ['drawing']

@@ -10,14 +10,15 @@
                         <div class="alert alert-primary" *ngIf="zona !=null" role="alert">
                             Su Zona Asignada es: <strong>{{zona}}</strong>
                         </div>
+                        <div class="alert alert-warning" *ngIf="zona ==null" role="alert">
+                            <strong>No tiene ninguna zona asignada</strong>
+                        </div>
                     </div>
                     <div class="col-lg-5 text-right">
                         <label style="font-size: 20px" class="col-form-label">Total de Incidentes: <strong>{{incidentes.length}}</strong></label>
                     </div>
                 </div>
-                <div class="alert alert-warning" *ngIf="zona ==null" role="alert">
-                    <strong>No tiene ninguna zona asignada</strong>
-                </div>
+            
                 <div class="map-box">
                     <agm-map [fullscreenControl]='true' [mapTypeControl]='true' [zoom]="10.6" [latitude]="latitude" [longitude]="longitude">
                         <agm-marker *ngFor="let incidenteItem of incidentes" [latitude]="incidenteItem.latitud" [longitude]="incidenteItem.longitud" [iconUrl]="incidenteItem.icono" (markerClick)="markerClicked($event,infoWindow,incidenteItem)">
@@ -45,15 +46,28 @@
                     <a class="nav-link" (click)="obtenerIncidentes('CHG')" id="pills-timeline-tab" data-toggle="pill" href="#asignados" role="tab" aria-selected="false">Asignados</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" (click)="obtenerIncidentes('CAN')" id="pills-timeline-tab" data-toggle="pill" href="#falsos" role="tab" aria-selected="false">Falsos</a>
+                    <a class="nav-link" (click)="obtenerIncidentes('CAN')" id="pills-timeline-tab" data-toggle="pill" href="#falsos" role="tab" aria-selected="false">Cancelados</a>
                 </li>
             </ul>
             <div class="tab-content" id="pills-tabContent">
                 <div class="tab-pane fade active show" id="current-month" role="tabpanel" aria-labelledby="pills-timeline-tab">
                     <div class="card-body">
+                        <div class="form-group col-lg-6">
+                            <input type="text" class="form-control" id="exampleInputUsername1" [(ngModel)]="filterIncidentes" placeholder="Buscar">
+                        </div>
                         <div style="height: 525px; overflow-y: auto; overflow-x: hidden;" *ngIf="estado =='GEN'">
+                            <div class="col-12 text-center" *ngIf="isCargando">
+                                <img src="assets/img/loading/loader.gif" width="160px" height="120px">
+                                <br>
+                                <span>Espere por favor</span>
+                              </div>
+    
+                              <div style="height: 525px; overflow-y: auto; overflow-x: hidden;" class="col-12 text-center" *ngIf="incidentes.length==0 && !isCargando">
+                                <h1 style="margin-top: 150px;" class="text-danger fw-700">No existen registros</h1>
+                                <img src="assets/img/carpeta.png" width="120px" height="120px">
+                              </div>
                             <div class="profiletimeline mt-0">
-                                <div class="sl-item" *ngFor="let incidente of incidentes ; let i = index">
+                                <div class="sl-item" *ngFor="let incidente of incidentes  | filter:filterIncidentes;  let i = index">
                                     <div class="sl-left"> <img [src]="incidente.persona.fotoPerfil==null?'assets/img/user.png':incidente.persona.fotoPerfil" alt="user" class="rounded-circle"> </div>
                                     <div class="sl-right">
                                         <div>
@@ -107,7 +121,7 @@
                                             No existen registros
                                         </td>
                                     </tr>
-                                    <tr *ngFor="let incidente of incidentes ; let i = index">
+                                    <tr *ngFor="let incidente of incidentes  | filter:filterIncidentes;  let i = index">
                                         <td>{{i+1}}</td>
                                         <td>{{incidente.persona.identificacion}}</td>
                                         <td>{{incidente.persona.nombres}} {{incidente.persona.apellidos}}</td>
@@ -212,7 +226,7 @@
                                         <div class="table-responsive" style="overflow:scroll; height:180px;  overflow-x: hidden; /* Hide horizontal scrollbar */">
                                             <table class="table">
                                                 <tr *ngFor="let agente of agentes | filter:filterTerm">
-                                                    <td>{{agente.nombres}}</td>
+                                                    <td>{{agente.nombrePersona}} {{agente.apellidoPersona}}</td>
                                                     <td><i data-dismiss="modal" (click)="asignarIncidenteAgente(agente)" class="ik ik-bell text-success" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="Asignar Incidente"></i></td>
                                                 </tr>
                                             </table>

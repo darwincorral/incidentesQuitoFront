@@ -35,7 +35,7 @@ export class IncidentesService {
   }
 
   obtenerListaAgentes(){
-    return this.http.get(environment.URL_SERVICIOS_SEGURIDAD +`/personal/findAll_Persona01_ByCriterio/*/*/*/*/*/1/500`);
+    return this.http.get(environment.URL_SERVICIOS_SEGURIDAD +`/perfil/getListPerfilByIdApp/3`);
   }
 
   obtenerTotalIncidentes(tipoIncidente){
@@ -45,6 +45,10 @@ export class IncidentesService {
   
   obtenerZonas(){
     return this.http.get(environment.URL_SERVICIOS+'/catalogo/findIdPadre/62c149bed2543a1ac1d61fdb');
+  }
+
+  obtenerTipoIncidentes(){
+    return this.http.get(environment.URL_SERVICIOS+'/catalogo/findIdPadre/62c14930d2543a1ac1d61fbe');
   }
 
   obtenerZonasOperadores(){

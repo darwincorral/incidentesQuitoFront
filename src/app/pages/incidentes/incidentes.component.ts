@@ -18,6 +18,7 @@ export class IncidentesComponent implements OnInit {
   latitude = -0.15985;
   longitude = -78.42495;
   filterTerm: string = "";
+  filterIncidentes: string = "";
   estado = "GEN";
   previous;
   operador;
@@ -32,7 +33,6 @@ export class IncidentesComponent implements OnInit {
 
   ngOnInit() {
     this.obtenerZonas();
-    this.obtetenerZonaOperador();
     this.obtenerListaAgentes();
   }
 
@@ -71,7 +71,6 @@ export class IncidentesComponent implements OnInit {
   }
 
   markerClicked(event, infoWindow, incidente) {
-    console.log(incidente);
     if (this.previous) {
       this.previous.close();
     }
@@ -90,6 +89,7 @@ export class IncidentesComponent implements OnInit {
           (zonas: any) => {
             Swal.close();
             this.zonas = zonas;
+            this.obtetenerZonaOperador();
           },
           (error) => {
             Swal.close();
@@ -102,7 +102,6 @@ export class IncidentesComponent implements OnInit {
 
   obtetenerZonaOperador() {
     this.operador = this.usuarioService.persona;
-    console.log(this.operador);
       this.incidentesService .obtenerZonasOperadores().subscribe((zonaOperadores: any) => {
           for (let zonaOperador of zonaOperadores)
             if (zonaOperador.nombre == this.operador.numeroIdentificacion) {
@@ -149,6 +148,9 @@ export class IncidentesComponent implements OnInit {
             }
           }
           this.incidentes = incidentesNew;
+        }else{
+          const result = this.incidentes.filter(incidenteByOperador => incidenteByOperador.operador == this.operador.numeroIdentificacion);
+          this.incidentes = result;
         }
       },
       (error) => {
@@ -204,7 +206,8 @@ export class IncidentesComponent implements OnInit {
   obtenerListaAgentes() {
     this.incidentesService.obtenerListaAgentes().subscribe(
       (agentes: any) => {
-        this.agentes = agentes.retorno;
+        this.agentes = agentes.retorno[2].listPerfilListUsuarioDTO;
+        console.log(this.agentes)
       },
       (error) => {}
     );

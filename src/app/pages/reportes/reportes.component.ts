@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { IncidentesService } from "src/app/services/service.index";
 import * as XLSX from "xlsx";
+
 @Component({
   selector: "app-reportes",
   templateUrl: "./reportes.component.html",

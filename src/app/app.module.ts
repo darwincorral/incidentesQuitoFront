@@ -18,7 +18,7 @@ import { ServiceModule } from './services/service.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { ForgotPasswordComponent } from './login/forgot-password.component';
-
+import { ChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -35,6 +35,7 @@ import { ForgotPasswordComponent } from './login/forgot-password.component';
     ServiceModule,
     FormsModule,
     ReactiveFormsModule,
+    ChartsModule
   ],
   providers: [
   ],
